@@ -1,2 +1,12 @@
-<h1>Posts#index</h1>
-<p>Find me in app/views/posts/index.html.erb</p>
+<h1>CollabTune</h1>
+<h2>投稿一覧</h2>
+
+<% @posts.each do |post| %>
+  <div class="post">
+    <h3><%= post.title %></h3>
+    <p><%= post.description %></p>
+    <p>ジャンル: <%= post.genre.presence || "未設定" %></p>
+    <p>投稿者: <%= post.user.nickname %></p>
+    <hr>
+  </div>
+<% end %>
