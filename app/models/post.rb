@@ -1,7 +1,5 @@
 class Post < ApplicationRecord
   belongs_to :user
-<<<<<<< Updated upstream
-=======
   has_one_attached :audio  
   has_many :comments, dependent: :destroy
   validates :title, presence: true
@@ -10,6 +8,5 @@ class Post < ApplicationRecord
     in: ['audio/mpeg', 'audio/wav'],
     message: 'はMP3またはWAV形式のファイルをアップロードしてください'
   }
->>>>>>> Stashed changes
 end
 
