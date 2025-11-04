@@ -15,4 +15,11 @@
   <p>音源ファイルはアップロードされていません。</p>
 <% end %>
 
+<hr>
+
+<% if user_signed_in? && current_user == @post.user %>
+  <%= link_to "編集", edit_post_path(@post), class: "btn btn-primary" %>
+  <%= link_to "削除", @post, data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>
+<% end %>
+
 <%= link_to "一覧に戻る", posts_path %>
