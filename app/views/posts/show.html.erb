@@ -1,0 +1,18 @@
+<h2><%= @post.title %></h2>
+
+<p><%= @post.description %></p>
+<p>ジャンル: <%= @post.genre.presence || "未設定" %></p>
+<p>テンポ: <%= @post.tempo.presence || "未設定" %> BPM</p>
+<p>投稿者: <%= @post.user.nickname %></p>
+
+<% if @post.audio.attached? %>
+  <p>🎵 音源を再生:</p>
+  <audio controls>
+    <source src="<%= url_for(@post.audio) %>" type="audio/mpeg">
+    お使いのブラウザはオーディオ再生をサポートしていません。
+  </audio>
+<% else %>
+  <p>音源ファイルはアップロードされていません。</p>
+<% end %>
+
+<%= link_to "一覧に戻る", posts_path %>
