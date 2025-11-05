@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_04_044057) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_05_020334) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -37,6 +37,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_04_044057) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "collaborations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "requester_id", null: false
+    t.bigint "receiver_id", null: false
+    t.bigint "post_id", null: false
+    t.string "status", default: "pending", null: false
+    t.text "message", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_collaborations_on_post_id"
+    t.index ["receiver_id"], name: "fk_rails_c6b75339fd"
+    t.index ["requester_id"], name: "fk_rails_2ae4e9d7db"
   end
 
   create_table "comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -78,6 +91,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_04_044057) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "collaborations", "posts"
+  add_foreign_key "collaborations", "users", column: "receiver_id"
+  add_foreign_key "collaborations", "users", column: "requester_id"
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
   add_foreign_key "posts", "users"

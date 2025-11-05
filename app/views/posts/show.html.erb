@@ -58,3 +58,20 @@
 <% else %>
   <p>コメントを投稿するにはログインが必要です。</p>
 <% end %>
+
+<hr>
+
+<% if user_signed_in? && current_user != @post.user %>
+  <h3>コラボ申請</h3>
+  <%= form_with(model: Collaboration.new, url: collaborations_path, local: true) do |f| %>
+    <%= f.hidden_field :receiver_id, value: @post.user.id %>
+    <%= f.hidden_field :post_id, value: @post.id %>
+    <div>
+      <%= f.label :message, "メッセージ" %><br>
+      <%= f.text_area :message, rows: 3 %>
+    </div>
+    <div>
+      <%= f.submit "コラボ申請を送る" %>
+    </div>
+  <% end %>
+<% end %>

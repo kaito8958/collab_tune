@@ -2,6 +2,7 @@ class Post < ApplicationRecord
   belongs_to :user
   has_one_attached :audio
   has_many :comments, dependent: :destroy
+  has_many :collaborations, dependent: :destroy
 
   validates :title, presence: true
 

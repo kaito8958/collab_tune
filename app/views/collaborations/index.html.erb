@@ -1,0 +1,39 @@
+<h2>コラボ申請一覧</h2>
+
+<h3> 送信した申請</h3>
+<% if @sent_collaborations.any? %>
+  <ul>
+    <% @sent_collaborations.each do |collab| %>
+      <li>
+        <strong>宛先:</strong> <%= collab.receiver.nickname %>（<%= collab.post.title %>）<br>
+        <strong>ステータス:</strong> <%= collab.status %><br>
+        <strong>メッセージ:</strong> <%= collab.message %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>送信した申請はありません。</p>
+<% end %>
+
+<hr>
+
+<h3> 受信した申請</h3>
+<% if @received_collaborations.any? %>
+  <ul>
+    <% @received_collaborations.each do |collab| %>
+      <li>
+        <strong>送信者:</strong> <%= collab.requester.nickname %>（<%= collab.post.title %>）<br>
+        <strong>ステータス:</strong> <%= collab.status %><br>
+        <strong>メッセージ:</strong> <%= collab.message %>
+      </li>
+      <% if collab.status == "pending" %>
+        <%= button_to "承認", collaboration_path(collab, status: "accepted"), method: :patch, class: "btn btn-success" %>
+        <%= button_to "拒否", collaboration_path(collab, status: "rejected"), method: :patch, class: "btn btn-danger" %>
+      <% else %>
+        <em>（すでに<%= collab.status == "accepted" ? "承認" : "拒否" %>済み）</em>
+      <% end %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>受信した申請はありません。</p>
+<% end %>

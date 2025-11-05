@@ -107,12 +107,34 @@ erDiagram
     datetime updated_at
   }
 
+  CHAT_ROOMS {
+    bigint id PK
+    bigint collaboration_id FK
+    bigint requester_id FK
+    bigint receiver_id FK
+    datetime created_at
+    datetime updated_at
+  }
+
+  MESSAGES {
+    bigint id PK
+    bigint chat_room_id FK
+    bigint user_id FK
+    text content
+    datetime created_at
+    datetime updated_at
+  }
+
   USERS ||--o{ POSTS : "has many"
   USERS ||--o{ COMMENTS : "has many"
   USERS ||--o{ COLLABORATIONS : "sent (requester)"
   USERS ||--o{ COLLABORATIONS : "received (receiver)"
+  USERS ||--o{ MESSAGES : "sends"
   POSTS ||--o{ COMMENTS : "has many"
   POSTS ||--o{ COLLABORATIONS : "has many"
+  COLLABORATIONS ||--|| CHAT_ROOMS : "has one"
+  CHAT_ROOMS ||--o{ MESSAGES : "has many"
+
 ```
 ## 画面遷移図
 ```mermaid
@@ -121,11 +143,17 @@ graph TD
   A --> C[ログインページ]
   A --> D[投稿詳細ページ]
   A --> E[投稿作成ページ]
+  A --> H[コラボ一覧ページ<br>（自分の申請・受信状況）]
+
   D --> F[コメント投稿<br>（同ページ内）]
   D --> G[コラボ申請<br>（モーダルまたは別ページ）]
+
   B --> A
   C --> A
   E --> A
+  G --> H
+  H --> D
+
   ```
 ## 🚀 今後の拡張予定
 

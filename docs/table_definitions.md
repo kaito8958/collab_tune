@@ -1,4 +1,4 @@
-# 📘 CollabTune テーブル定義書
+#  CollabTune テーブル定義書
 
 このドキュメントは、CollabTune におけるデータベース設計（テーブル構成・カラム情報・リレーション）をまとめたものです。
 
@@ -85,6 +85,43 @@
 
 ---
 
+
+## chat_rooms テーブル
+
+| カラム名             | 型        | 制約              | 説明                              |
+| ---------------- | -------- | --------------- | ------------------------------- |
+| id               | bigint   | PK              | チャットルームID                       |
+| collaboration_id | bigint   | FK, null: false | 対応するコラボID（collaborations.id 参照） |
+| requester_id     | bigint   | FK, null: false | チャットを開始したユーザー（申請者）              |
+| receiver_id      | bigint   | FK, null: false | 受信ユーザー（投稿者）                     |
+| created_at       | datetime | null: false     | 作成日時                            |
+| updated_at       | datetime | null: false     | 更新日時                            |
+
+**アソシエーション**
+
+- belongs_to :collaboration
+- belongs_to :requester, class_name: "User"
+- belongs_to :receiver, class_name: "User"
+- has_many :messages, dependent: :destroy
+
+---
+
+## messages テーブル
+
+| カラム名         | 型        | 制約              | 説明                          |
+| ------------ | -------- | --------------- | --------------------------- |
+| id           | bigint   | PK              | メッセージID                     |
+| chat_room_id | bigint   | FK, null: false | チャットルームID（chat_rooms.id 参照） |
+| user_id      | bigint   | FK, null: false | 送信者ID（users.id 参照）          |
+| content      | text     | null: false     | メッセージ本文                     |
+| created_at   | datetime | null: false     | 送信日時                        |
+| updated_at   | datetime | null: false     | 更新日時                        |
+
+**アソシエーション**
+
+- belongs_to :chat_room
+- belongs_to :user
+
 ## 🔗 リレーション図（参考）
 
 ```mermaid
@@ -93,5 +130,9 @@ erDiagram
   USERS ||--o{ COMMENTS : "has many"
   USERS ||--o{ COLLABORATIONS : "sent (requester)"
   USERS ||--o{ COLLABORATIONS : "received (receiver)"
+  USERS ||--o{ MESSAGES : "sends"
   POSTS ||--o{ COMMENTS : "has many"
   POSTS ||--o{ COLLABORATIONS : "has many"
+  COLLABORATIONS ||--|| CHAT_ROOMS : "has one"
+  CHAT_ROOMS ||--o{ MESSAGES : "has many"
+
