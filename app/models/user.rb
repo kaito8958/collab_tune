@@ -8,4 +8,6 @@ class User < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :sent_collaborations, class_name: "Collaboration", foreign_key: :requester_id, dependent: :destroy
   has_many :received_collaborations, class_name: "Collaboration", foreign_key: :receiver_id, dependent: :destroy
+  has_many :messages, dependent: :destroy
+
 end

@@ -1,0 +1,19 @@
+<h2>チャットルーム</h2>
+<hr>
+
+<div id="messages">
+  <% @messages.each do |message| %>
+    <p>
+      <strong><%= message.user.nickname %>：</strong>
+      <%= message.content %>
+    </p>
+  <% end %>
+</div>
+
+<hr>
+<%= form_with(model: [@chat_room, @message], local: true) do |form| %>
+  <%= form.text_area :content, rows: 3 %><br>
+  <%= form.submit "送信" %>
+<% end %>
+
+<%= link_to "チャット一覧に戻る", chat_rooms_path %>

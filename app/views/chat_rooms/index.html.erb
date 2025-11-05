@@ -1,0 +1,17 @@
+<h2>チャットルーム一覧</h2>
+<hr>
+
+<% @chat_rooms.each do |room| %>
+  <div>
+    <p>
+      <%= link_to "チャットルーム ##{room.id}", chat_room_path(room) %><br>
+      相手：
+      <% if room.requester_id == current_user.id %>
+        <%= User.find(room.receiver_id).nickname %>
+      <% else %>
+        <%= User.find(room.requester_id).nickname %>
+      <% end %>
+    </p>
+    <hr>
+  </div>
+<% end %>
