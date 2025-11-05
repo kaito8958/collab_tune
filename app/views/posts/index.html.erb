@@ -2,7 +2,7 @@
     <hr>
 <% @posts.each do |post| %>
   <div class="post">
-    <h3><%= post.title %></h3>
+    <h3><%= link_to post.title, post_path(post) %></h3>
     <p><%= post.description %></p>
     <p>ジャンル: <%= post.genre.presence || "未設定" %></p>
     <p>投稿者: <%= post.user.nickname %></p>
