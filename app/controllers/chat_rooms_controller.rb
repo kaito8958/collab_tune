@@ -3,14 +3,23 @@ class ChatRoomsController < ApplicationController
 
   # 自分に関係するチャットルーム一覧
   def index
-    @chat_rooms = ChatRoom.where("requester_id = ? OR receiver_id = ?", current_user.id, current_user.id)
+    @chat_rooms = ChatRoom
+    .includes(:collaboration, :requester, :receiver)
+    .where("requester_id = ? OR receiver_id = ?", current_user.id, current_user.id)
+    .order(created_at: :desc)
   end
 
   # 特定チャットルームを表示（メッセージ一覧）
   def show
     @chat_room = ChatRoom.find(params[:id])
     @messages = @chat_room.messages.order(:created_at)
-    @message = Message.new
+    @message = @chat_room.messages.new
+
+    # 自分宛ての未読メッセージを既読にする
+    @messages
+      .where.not(user_id: current_user.id)
+      .where(read: false)
+      .update_all(read: true)
   end
 
   # 手動でルームを作る（テスト用）
