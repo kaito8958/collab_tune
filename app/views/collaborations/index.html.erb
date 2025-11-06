@@ -1,13 +1,21 @@
 <h2>コラボ申請一覧</h2>
 
-<h3> 送信した申請</h3>
+<h3>送信した申請</h3>
 <% if @sent_collaborations.any? %>
   <ul>
     <% @sent_collaborations.each do |collab| %>
-      <li>
+      <li style="margin-bottom: 1em;">
         <strong>宛先:</strong> <%= collab.receiver.nickname %>（<%= collab.post.title %>）<br>
         <strong>ステータス:</strong> <%= collab.status %><br>
-        <strong>メッセージ:</strong> <%= collab.message %>
+        <strong>メッセージ:</strong> <%= collab.message %><br>
+
+        <% if collab.status == "accepted" && collab.chat_room.present? %>
+          <%= link_to "チャットへ", chat_room_path(collab.chat_room), class: "btn btn-primary", style: "margin-top: 5px;" %>
+        <% elsif collab.status == "pending" %>
+          <em>（承認待ち）</em>
+        <% else %>
+          <em>（<%= collab.status == "rejected" ? "拒否されました" : "不明な状態" %>）</em>
+        <% end %>
       </li>
     <% end %>
   </ul>
@@ -17,21 +25,24 @@
 
 <hr>
 
-<h3> 受信した申請</h3>
+<h3>受信した申請</h3>
 <% if @received_collaborations.any? %>
   <ul>
     <% @received_collaborations.each do |collab| %>
-      <li>
+      <li style="margin-bottom: 1em;">
         <strong>送信者:</strong> <%= collab.requester.nickname %>（<%= collab.post.title %>）<br>
         <strong>ステータス:</strong> <%= collab.status %><br>
-        <strong>メッセージ:</strong> <%= collab.message %>
+        <strong>メッセージ:</strong> <%= collab.message %><br>
+
+        <% if collab.status == "pending" %>
+          <%= button_to "承認", collaboration_path(collab, status: "accepted"), method: :patch, class: "btn btn-success", style: "margin-right:5px;" %>
+          <%= button_to "拒否", collaboration_path(collab, status: "rejected"), method: :patch, class: "btn btn-danger" %>
+        <% elsif collab.status == "accepted" && collab.chat_room.present? %>
+          <%= link_to "チャットへ", chat_room_path(collab.chat_room), class: "btn btn-primary", style: "margin-top: 5px;" %>
+        <% else %>
+          <em>（<%= collab.status == "rejected" ? "拒否済み" : "承認済み" %>）</em>
+        <% end %>
       </li>
-      <% if collab.status == "pending" %>
-        <%= button_to "承認", collaboration_path(collab, status: "accepted"), method: :patch, class: "btn btn-success" %>
-        <%= button_to "拒否", collaboration_path(collab, status: "rejected"), method: :patch, class: "btn btn-danger" %>
-      <% else %>
-        <em>（すでに<%= collab.status == "accepted" ? "承認" : "拒否" %>済み）</em>
-      <% end %>
     <% end %>
   </ul>
 <% else %>

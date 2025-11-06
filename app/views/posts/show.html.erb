@@ -63,15 +63,32 @@
 
 <% if user_signed_in? && current_user != @post.user %>
   <h3>コラボ申請</h3>
-  <%= form_with(model: Collaboration.new, url: collaborations_path, local: true) do |f| %>
-    <%= f.hidden_field :receiver_id, value: @post.user.id %>
-    <%= f.hidden_field :post_id, value: @post.id %>
-    <div>
-      <%= f.label :message, "メッセージ" %><br>
-      <%= f.text_area :message, rows: 3 %>
-    </div>
-    <div>
-      <%= f.submit "コラボ申請を送る" %>
-    </div>
+
+  <% existing_collab = Collaboration.find_by(requester_id: current_user.id, receiver_id: @post.user.id, post_id: @post.id) %>
+
+  <% if existing_collab.present? %>
+    <% if existing_collab.status == "pending" %>
+      <p>⏳ この投稿にはコラボ申請済みです（承認待ち）。</p>
+    <% elsif existing_collab.status == "accepted" %>
+      <p>✅ この投稿はコラボが成立しています。</p>
+      <% if existing_collab.chat_room.present? %>
+        <%= link_to "チャットへ", chat_room_path(existing_collab.chat_room), class: "btn btn-primary" %>
+      <% end %>
+    <% elsif existing_collab.status == "rejected" %>
+      <p>❌ この投稿への申請は拒否されました。</p>
+    <% end %>
+
+  <% else %>
+    <%= form_with(model: Collaboration.new, url: collaborations_path, local: true) do |f| %>
+      <%= f.hidden_field :receiver_id, value: @post.user.id %>
+      <%= f.hidden_field :post_id, value: @post.id %>
+      <div>
+        <%= f.label :message, "メッセージ" %><br>
+        <%= f.text_area :message, rows: 3 %>
+      </div>
+      <div>
+        <%= f.submit "コラボ申請を送る", class: "btn btn-success" %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>

@@ -23,29 +23,29 @@ class CollaborationsController < ApplicationController
     end
   end
 
-  def update
-    @collaboration = Collaboration.find(params[:id])
+def update
+  @collaboration = Collaboration.find(params[:id])
 
-    if params[:status].in?(%w[accepted rejected])
-      @collaboration.update(status: params[:status])
+  if params[:status].in?(%w[accepted rejected])
+    @collaboration.update(status: params[:status])
 
-      if @collaboration.status == "accepted"
-        unless @collaboration.chat_room.present?
-          ChatRoom.create!(
-            collaboration_id: @collaboration.id,
-            requester_id: @collaboration.requester_id,
-            receiver_id: @collaboration.receiver_id
-          )
-        end
-
-        redirect_to collaborations_path, notice: "コラボ申請を承認し、チャットルームを作成しました。"
-      else
-        redirect_to collaborations_path, alert: "コラボ申請を拒否しました。"
-      end
+    if @collaboration.status == "accepted"
+      room = ChatRoom.create!(
+        collaboration_id: @collaboration.id,
+        requester_id: @collaboration.requester_id,
+        receiver_id: @collaboration.receiver_id
+      )
+      redirect_to chat_room_path(room), notice: "コラボを承認しました。チャットを開始しましょう。"
+      return
     else
-      redirect_to collaborations_path, alert: "無効な操作です。"
+      redirect_to collaborations_path, alert: "コラボ申請を拒否しました。"
+      return
     end
+  else
+    redirect_to collaborations_path, alert: "無効な操作です。"
+    return
   end
+end
 
 
 
