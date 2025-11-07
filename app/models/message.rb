@@ -21,7 +21,7 @@ class Message < ApplicationRecord
         message_html: ApplicationController.render(
           partial: "messages/message",
           formats: [:html],
-          locals: { message: self }
+          locals: { message: self, current_user: user }
         ),
         message_id: id, # ✅ 追加：既読APIで使用
         user_id: user.id

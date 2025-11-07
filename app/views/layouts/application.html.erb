@@ -10,7 +10,7 @@
 
   <body data-current-user-id="<%= current_user&.id %>"
         data-current-room-id="<%= @chat_room&.id %>">
-    <header style="padding:10px; background:#f2f2f2; display:flex; justify-content:space-between; align-items:center;">
+    <header class="global-header" style="background:#f2f2f2; display:flex; justify-content:space-between; align-items:center;">
       <h1><%= link_to "CollabTune", root_path %></h1>
 
       <nav>
@@ -37,7 +37,7 @@
     </header>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
-    <main style="padding: 20px;">
+    <main class="main-content">
       <%= yield %>
     </main>
   </body>
