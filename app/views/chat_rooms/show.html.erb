@@ -20,3 +20,12 @@
   import { subscribeToMessages } from "/assets/channels/message_channel.js";
   subscribeToMessages(<%= @chat_room.id %>);
 </script>
+
+<script>
+  document.addEventListener("turbo:submit-end", (event) => {
+    const form = event.target;
+    if (form.closest("#message_form")) {
+      form.reset(); // ✅ 送信後にフォームを空にする
+    }
+  });
+</script>

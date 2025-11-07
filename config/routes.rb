@@ -15,8 +15,11 @@ Rails.application.routes.draw do
   resources :chat_rooms, only: [:index, :show, :create] do
     resources :messages, only: [:create]
   end
+
+  # ✅ ここを追加（既読API）
+  resources :messages, only: [] do
+    patch :mark_as_read, on: :member
+  end
+
   mount ActionCable.server => '/cable'
-
 end
-
-

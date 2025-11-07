@@ -8,7 +8,8 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body data-current-user-id="<%= current_user&.id %>">
+  <body data-current-user-id="<%= current_user&.id %>"
+        data-current-room-id="<%= @chat_room&.id %>">
     <header style="padding:10px; background:#f2f2f2; display:flex; justify-content:space-between; align-items:center;">
       <h1><%= link_to "CollabTune", root_path %></h1>
 

@@ -2,4 +2,4 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "channels"
-console.log("✅ application.js loaded")
+

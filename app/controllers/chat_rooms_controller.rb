@@ -10,17 +10,31 @@ class ChatRoomsController < ApplicationController
   end
 
   # 特定チャットルームを表示（メッセージ一覧）
-  def show
-    @chat_room = ChatRoom.find(params[:id])
-    @messages = @chat_room.messages.order(:created_at)
-    @message = @chat_room.messages.new
+def show
+  @chat_room = ChatRoom.find(params[:id])
+  @messages = @chat_room.messages.order(:created_at)
+  @message = @chat_room.messages.new
 
-    # 自分宛ての未読メッセージを既読にする
-    @messages
-      .where.not(user_id: current_user.id)
-      .where(read: false)
-      .update_all(read: true)
-  end
+  # 自分宛ての未読メッセージを既読にする
+  unread_messages = @messages
+                      .where.not(user_id: current_user.id)
+                      .where(read: false)
+  unread_messages.update_all(read: true)
+
+  # ✅ ヘッダー未読バッジを即時更新（ActionCable経由）
+  unread_count = Message
+                   .where(read: false)
+                   .joins(:chat_room)
+                   .where(chat_rooms: { requester_id: current_user.id })
+                   .or(Message.where(read: false)
+                   .joins(:chat_room)
+                   .where(chat_rooms: { receiver_id: current_user.id }))
+                   .count
+
+  ActionCable.server.broadcast("notifications_#{current_user.id}", {
+    unread_count: unread_count
+  })
+end
 
   # 手動でルームを作る（テスト用）
   def create
