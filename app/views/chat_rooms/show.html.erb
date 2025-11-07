@@ -2,18 +2,21 @@
 <hr>
 
 <div id="messages">
-  <% @messages.each do |message| %>
-    <p>
-      <strong><%= message.user.nickname %>：</strong>
-      <%= message.content %>
-    </p>
-  <% end %>
+  <%= render @messages %>
 </div>
 
 <hr>
-<%= form_with(model: [@chat_room, @message], local: true) do |form| %>
-  <%= form.text_area :content, rows: 3 %><br>
-  <%= form.submit "送信" %>
-<% end %>
+
+<div id="message_form">
+  <%= form_with(model: [@chat_room, @message]) do |form| %>
+    <%= form.text_area :content, rows: 3 %><br>
+    <%= form.submit "送信" %>
+  <% end %>
+</div>
 
 <%= link_to "チャット一覧に戻る", chat_rooms_path %>
+
+<script type="module">
+  import { subscribeToMessages } from "/assets/channels/message_channel.js";
+  subscribeToMessages(<%= @chat_room.id %>);
+</script>

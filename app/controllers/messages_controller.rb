@@ -7,7 +7,10 @@ class MessagesController < ApplicationController
     @message.user = current_user
 
     if @message.save
-      redirect_to chat_room_path(@chat_room)
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to @chat_room }
+      end
     else
       @messages = @chat_room.messages.order(:created_at)
       flash.now[:alert] = "メッセージを入力してください。"

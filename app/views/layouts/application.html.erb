@@ -8,31 +8,31 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-<header style="padding:10px; background:#f2f2f2; display:flex; justify-content:space-between; align-items:center;">
-  <h1><%= link_to "CollabTune", root_path %></h1>
+  <body data-current-user-id="<%= current_user&.id %>">
+    <header style="padding:10px; background:#f2f2f2; display:flex; justify-content:space-between; align-items:center;">
+      <h1><%= link_to "CollabTune", root_path %></h1>
 
-  <nav>
-    <% if user_signed_in? %>
-      <span>こんにちは、<%= current_user.nickname %> さん</span>
-      |
-      <%= link_to "投稿一覧", posts_path %> |
-      <%= link_to "投稿する", new_post_path %> |
-      <%= link_to "コラボ一覧", collaborations_path %> |
+      <nav>
+        <% if user_signed_in? %>
+          <span>こんにちは、<%= current_user.nickname %> さん</span>
+          |
+          <%= link_to "投稿一覧", posts_path %> |
+          <%= link_to "投稿する", new_post_path %> |
+          <%= link_to "コラボ一覧", collaborations_path %> |
 
-      <% if @unread_count.positive? %>
-        <%= link_to "チャット一覧（#{@unread_count}）", chat_rooms_path, class: "btn btn-notice" %> |
-      <% else %>
-        <%= link_to "チャット一覧", chat_rooms_path %> |
-      <% end %>
-      
-      <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete } %>
-    <% else %>
-      <%= link_to "新規登録", new_user_registration_path %> |
-      <%= link_to "ログイン", new_user_session_path %>
-    <% end %>
-  </nav>
-</header>
+          <% if @unread_count.positive? %>
+            <%= link_to "チャット一覧（#{@unread_count}）", chat_rooms_path, class: "btn btn-notice" %> |
+          <% else %>
+            <%= link_to "チャット一覧", chat_rooms_path %> |
+          <% end %>
+
+          <%= link_to "ログアウト", destroy_user_session_path, data: { turbo_method: :delete } %>
+        <% else %>
+          <%= link_to "新規登録", new_user_registration_path %> |
+          <%= link_to "ログイン", new_user_session_path %>
+        <% end %>
+      </nav>
+    </header>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
     <main style="padding: 20px;">
