@@ -1,0 +1,28 @@
+<h2>チャット一覧</h2>
+<hr>
+
+<% if @chat_rooms.any? %>
+  <ul>
+    <% @chat_rooms.each do |room| %>
+      <% collab = room.collaboration %>
+      <% partner = room.requester == current_user ? room.receiver : room.requester %>
+      <% unread_count = room.messages
+                            .where.not(user_id: current_user.id)
+                            .where(read: false)
+                            .count %>
+
+      <li style="margin-bottom: 10px;">
+        <strong>相手:</strong> <%= partner.nickname %><br>
+        <strong>対象投稿:</strong> <%= collab.post.title if collab.post.present? %><br>
+
+        <% if unread_count > 0 %>
+          <span style="color:red; font-weight:bold;">未読: <%= unread_count %> 件</span><br>
+        <% end %>
+
+        <%= link_to "チャットを開く", chat_room_path(room), class: "btn btn-primary", style: "margin-top: 5px;" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>チャットルームはまだありません。</p>
+<% end %>

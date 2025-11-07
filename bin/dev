@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Rails + JavaScript(Importmap / esbuild / vite)を同時に起動するスクリプト
+# Procfile.devに書かれた設定をもとにforemanが両方立ち上げる
+
+if [ -f Procfile.dev ]; then
+  ./bin/rails s
+else
+  echo "Procfile.dev が見つかりません。 rails s を直接実行します。"
+  ./bin/rails s
+fi

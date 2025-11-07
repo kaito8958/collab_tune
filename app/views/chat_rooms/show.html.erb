@@ -1,0 +1,49 @@
+<div class="chat-room-page">
+  <div class="chat-header">
+    <h3>
+      <% if @chat_room.receiver == current_user %>
+        <%= @chat_room.requester.nickname %> さんとのチャット
+      <% else %>
+        <%= @chat_room.receiver.nickname %> さんとのチャット
+      <% end %>
+    </h3>
+    <% if @chat_room.collaboration.present? %>
+      <p class="chat-post-title">投稿: <%= @chat_room.collaboration.post.title %></p>
+    <% end %>
+  </div>
+
+  <div class="chat-container">
+    <div id="messages">
+      <%= render @messages %>
+    </div>
+
+  <%= form_with(model: [@chat_room, @message], html: { id: "message_form" }) do |form| %>
+    <%= form.text_area :content, rows: 2 %>
+    <%= form.submit "送信" %>
+  <% end %>
+  </div>
+
+  <%= link_to "チャット一覧に戻る", chat_rooms_path %>
+</div>
+
+<script type="module">
+  import { subscribeToMessages } from "/assets/channels/message_channel.js";
+  subscribeToMessages(<%= @chat_room.id %>);
+</script>
+
+<script>
+  document.addEventListener("turbo:submit-end", (event) => {
+    const form = event.target;
+    if (form.closest("#message_form")) form.reset();
+  });
+
+  // ✅ スクロールを下に固定
+  document.addEventListener("turbo:load", () => {
+    const messagesDiv = document.getElementById("messages");
+    if (!messagesDiv) return;
+    const scrollToBottom = () => messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    scrollToBottom();
+    const observer = new MutationObserver(scrollToBottom);
+    observer.observe(messagesDiv, { childList: true });
+  });
+</script>
