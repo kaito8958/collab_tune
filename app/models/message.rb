@@ -3,7 +3,15 @@ class Message < ApplicationRecord
   belongs_to :user
 
   after_create_commit :broadcast_message
+  after_create_commit :broadcast_notification  
 
+  scope :unread_for, ->(user) {
+    where(read: false)
+      .joins(:chat_room)
+      .where("chat_rooms.requester_id = :id OR chat_rooms.receiver_id = :id", id: user.id)
+      .where.not(user_id: user.id)
+  }
+  
   private
 
   def broadcast_message
@@ -16,6 +24,24 @@ class Message < ApplicationRecord
           locals: { message: self }
         ),
         user_id: user.id
+      }
+    )
+  end
+
+  def broadcast_notification
+    # 自分が送った側なら、通知すべきは相手側
+    recipient_id =
+      if chat_room.requester_id == user_id
+        chat_room.receiver_id
+      else
+        chat_room.requester_id
+      end
+
+    # 相手の未読件数を集計してブロードキャスト
+    ActionCable.server.broadcast(
+      "notifications_#{recipient_id}",
+      {
+        unread_count: Message.unread_for(User.find(recipient_id)).count
       }
     )
   end
