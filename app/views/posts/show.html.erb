@@ -1,94 +1,129 @@
-<h2><%= @post.title %></h2>
+<div  class="min-h-screen bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] py-10 px-4">
+  <div id="post-card-<%= @post.id %>" class="max-w-3xl mx-auto bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 border border-gray-200">
 
-<p><%= @post.description %></p>
-<p>ジャンル: <%= @post.genre.presence || "未設定" %></p>
-<p>テンポ: <%= @post.tempo.presence || "未設定" %> BPM</p>
-<p>投稿者: <%= @post.user.nickname %></p>
+    <!-- タイトル＆投稿者 -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-extrabold text-gray-800 mb-2"><%= @post.title %></h1>
+      <div class="flex justify-between items-center text-sm text-gray-600">
+        <span>by 
+          <%= link_to @post.user.nickname, user_path(@post.user), class: "font-semibold text-purple-600 hover:underline" %>
+        </span>
+        <span class="px-3 py-1 bg-gradient-to-r from-orange-400 to-pink-400 text-white text-xs font-semibold rounded-full shadow-sm">
+          <%= @post.genre.presence || "ジャンル未設定" %>
+        </span>
+      </div>
+    </div>
 
-<% if @post.audio.attached? %>
-  <p>🎵 音源を再生:</p>
-  <audio controls>
-    <source src="<%= url_for(@post.audio) %>" type="audio/mpeg">
-    お使いのブラウザはオーディオ再生をサポートしていません。
-  </audio>
-<% else %>
-  <p>音源ファイルはアップロードされていません。</p>
-<% end %>
+    <!-- 🎧 再生プレイヤー -->
+    <div class="flex items-center space-x-4 bg-gray-100 rounded-xl p-4 mb-3 <%= 'opacity-60 cursor-not-allowed' unless @post.audio.attached? %>">
+      <button id="btn-<%= @post.id %>" 
+        onclick="togglePlay(<%= @post.id %>)"
+        class="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-4 shadow-md flex-shrink-0 transition transform hover:scale-105"
+        <%= 'disabled' unless @post.audio.attached? %>>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+      </button>
+      <div class="flex-grow h-2 bg-gray-300/60 rounded-full relative overflow-hidden">
+        <div id="progress-<%= @post.id %>" 
+          class="absolute top-0 left-0 h-2 rounded-full w-0 transition-all duration-100"
+          style="background: linear-gradient(90deg, #a855f7, #6366f1);"></div>
+      </div>
+      <p id="time-<%= @post.id %>" class="text-xs text-gray-500 ml-2 whitespace-nowrap">0:00 / 0:00</p>
+    </div>
 
-<hr>
-
-<% if user_signed_in? && current_user == @post.user %>
-  <%= link_to "編集", edit_post_path(@post), class: "btn btn-primary" %>
-  <%= link_to "削除", @post, data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" }, class: "btn btn-danger" %>
-<% end %>
-
-<%= link_to "一覧に戻る", posts_path %>
-
-<hr>
-
-<h3>コメント一覧</h3>
-<% if @post.comments.any? %>
-  <ul>
-    <% @post.comments.each do |comment| %>
-      <li>
-        <strong><%= comment.user.nickname %>：</strong>
-        <%= comment.body %>
-        <% if comment.user == current_user %>
-          <%= link_to '削除', post_comment_path(@post, comment), method: :delete, data: { confirm: '本当に削除しますか？' } %>
-        <% end %>
-      </li>
+    <% if @post.audio.attached? %>
+      <audio id="audio-<%= @post.id %>" src="<%= url_for(@post.audio) %>"></audio>
     <% end %>
-  </ul>
-<% else %>
-  <p>まだコメントはありません。</p>
-<% end %>
 
-<hr>
-
-<% if user_signed_in? %>
-  <h4>コメントを投稿する</h4>
-  <%= form_with(model: [@post, Comment.new], local: true) do |f| %>
-    <div class="field">
-      <%= f.text_area :body, rows: 3, placeholder: "コメントを入力..." %>
-    </div>
-    <div class="actions">
-      <%= f.submit "送信", class: "btn btn-primary" %>
-    </div>
-  <% end %>
-<% else %>
-  <p>コメントを投稿するにはログインが必要です。</p>
-<% end %>
-
-<hr>
-
-<% if user_signed_in? && current_user != @post.user %>
-  <h3>コラボ申請</h3>
-
-  <% existing_collab = Collaboration.find_by(requester_id: current_user.id, receiver_id: @post.user.id, post_id: @post.id) %>
-
-  <% if existing_collab.present? %>
-    <% if existing_collab.status == "pending" %>
-      <p>⏳ この投稿にはコラボ申請済みです（承認待ち）。</p>
-    <% elsif existing_collab.status == "accepted" %>
-      <p>✅ この投稿はコラボが成立しています。</p>
-      <% if existing_collab.chat_room.present? %>
-        <%= link_to "チャットへ", chat_room_path(existing_collab.chat_room), class: "btn btn-primary" %>
+    <!-- 💬 詳細 -->
+    <div class="mt-6 mb-8">
+      <p class="text-gray-700 text-sm mb-3 leading-relaxed"><%= simple_format(@post.description) %></p>
+      <% if @post.tempo.present? %>
+        <p class="text-xs text-gray-500">🎚️ テンポ：<%= @post.tempo %> BPM</p>
       <% end %>
-    <% elsif existing_collab.status == "rejected" %>
-      <p>❌ この投稿への申請は拒否されました。</p>
+    </div>
+
+    <!-- 投稿者本人用 -->
+    <% if user_signed_in? && current_user == @post.user %>
+      <div class="flex space-x-3 mb-8">
+        <%= link_to "編集", edit_post_path(@post),
+            class: "px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-semibold shadow" %>
+        <%= link_to "削除", @post, data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" },
+            class: "px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-semibold shadow" %>
+      </div>
     <% end %>
 
-  <% else %>
-    <%= form_with(model: Collaboration.new, url: collaborations_path, local: true) do |f| %>
-      <%= f.hidden_field :receiver_id, value: @post.user.id %>
-      <%= f.hidden_field :post_id, value: @post.id %>
-      <div>
-        <%= f.label :message, "メッセージ" %><br>
-        <%= f.text_area :message, rows: 3 %>
-      </div>
-      <div>
-        <%= f.submit "コラボ申請を送る", class: "btn btn-success" %>
+    <!-- コラボ申請 -->
+    <% if user_signed_in? && current_user != @post.user %>
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-6 mb-8 shadow-inner">
+        <h3 class="text-lg font-bold text-gray-800 mb-3">🤝 コラボ申請</h3>
+
+        <% existing_collab = Collaboration.find_by(requester_id: current_user.id, receiver_id: @post.user.id, post_id: @post.id) %>
+
+        <% if existing_collab.present? %>
+          <% if existing_collab.status == "pending" %>
+            <p class="text-gray-700">⏳ この投稿にはコラボ申請済みです（承認待ち）。</p>
+          <% elsif existing_collab.status == "accepted" %>
+            <p class="text-green-600 font-semibold mb-2">✅ コラボが成立しています。</p>
+            <% if existing_collab.chat_room.present? %>
+              <%= link_to "チャットへ", chat_room_path(existing_collab.chat_room),
+                  class: "inline-block mt-2 px-5 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-full shadow-md transition" %>
+            <% end %>
+          <% elsif existing_collab.status == "rejected" %>
+            <p class="text-red-600">❌ この投稿への申請は拒否されました。</p>
+          <% end %>
+        <% else %>
+          <%= form_with(model: Collaboration.new, url: collaborations_path, local: true) do |f| %>
+            <%= f.hidden_field :receiver_id, value: @post.user.id %>
+            <%= f.hidden_field :post_id, value: @post.id %>
+            <div class="mb-3">
+              <%= f.label :message, "メッセージ", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= f.text_area :message, rows: 3, placeholder: "コラボしたい理由や簡単な自己紹介を書きましょう！",
+                  class: "w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none resize-none" %>
+            </div>
+            <div>
+              <%= f.submit "コラボ申請を送る",
+                  class: "w-full py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md transition" %>
+            </div>
+          <% end %>
+        <% end %>
       </div>
     <% end %>
-  <% end %>
-<% end %>
+
+    <!-- コメント欄 -->
+    <div class="mt-8">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">💬 コメント</h2>
+      <% if @post.comments.any? %>
+        <div class="space-y-3 mb-6">
+          <% @post.comments.each do |comment| %>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+              <p class="text-gray-700 text-sm"><%= comment.body %></p>
+              <p class="text-xs text-gray-500 mt-1">by <%= comment.user.nickname %></p>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500 mb-6">まだコメントはありません。</p>
+      <% end %>
+
+      <% if user_signed_in? %>
+        <%= form_with(model: [@post, Comment.new], local: true) do |f| %>
+          <div class="flex flex-col sm:flex-row sm:space-x-3">
+            <%= f.text_area :body, rows: 2, placeholder: "コメントを入力...",
+                class: "flex-grow px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 focus:outline-none resize-none" %>
+            <%= f.submit "送信",
+                class: "mt-2 sm:mt-0 px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md transition" %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-center text-gray-500">コメントするにはログインしてください。</p>
+      <% end %>
+    </div>
+
+    <!-- 戻る -->
+    <div class="mt-10 text-center">
+      <%= link_to "← 一覧に戻る", posts_path, class: "text-sm text-purple-600 hover:underline" %>
+    </div>
+  </div>
+</div>
