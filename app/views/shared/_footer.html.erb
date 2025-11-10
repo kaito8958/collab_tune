@@ -1,0 +1,35 @@
+<footer class="bg-gray-50 border-t border-gray-200 px-6 py-3 flex justify-between items-center text-sm text-gray-600">
+  <!-- 左：利用規約・お問い合わせ・SNS -->
+  <div class="flex items-center space-x-4">
+    <%= link_to "利用規約", "#", class: "hover:text-purple-600 transition" %>
+    <%= link_to "お問い合わせ", "#", class: "hover:text-purple-600 transition" %>
+    <div class="flex space-x-3 ml-2">
+      <%= link_to "#", title: "X (旧Twitter)", class: "hover:text-purple-600 transition" do %>
+        <i class="fa-brands fa-x-twitter text-lg"></i>
+      <% end %>
+      <%= link_to "#", title: "Instagram", class: "hover:text-purple-600 transition" do %>
+        <i class="fa-brands fa-instagram text-lg"></i>
+      <% end %>
+      <%= link_to "#", title: "YouTube", class: "hover:text-purple-600 transition" do %>
+        <i class="fa-brands fa-youtube text-lg"></i>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- 中央：Copyright -->
+  <p class="text-gray-500 text-center flex-grow">Copyright © CollabTune 2025</p>
+
+  <!-- 右：新規投稿ボタン -->
+  <div class="flex justify-end w-48">
+    <% if user_signed_in? %>
+<%= link_to new_post_path,
+  class: "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 
+          text-white px-5 py-1.5 rounded-full text-base font-semibold shadow-md hover:shadow-lg 
+          transition transform hover:-translate-y-0.5 flex items-center space-x-1" do %>
+  <i class="fa-solid fa-plus text-base"></i>
+  <span>NEW POST</span>
+<% end %>
+
+    <% end %>
+  </div>
+</footer>

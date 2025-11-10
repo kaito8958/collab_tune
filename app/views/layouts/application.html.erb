@@ -7,6 +7,7 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css", crossorigin: "anonymous" %>
   </head>
 
 <body data-current-user-id="<%= current_user&.id %>"
@@ -30,6 +31,8 @@
     </main>
 
     <!-- 共通フッター（後で作成） -->
-    <%= render "shared/footer" if lookup_context.exists?("shared/_footer") %>
+<% unless controller_name.in?(["chat_rooms", "sessions", "registrations"]) %>
+  <%= render "shared/footer" %>
+<% end %>
   </body>
 </html>
