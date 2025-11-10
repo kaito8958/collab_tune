@@ -1,0 +1,85 @@
+<header class="bg-gray-50 shadow-md border-b border-gray-200 px-6 py-2 flex justify-between items-center sticky top-0 z-40">
+  <!-- 左側：ロゴ -->
+  <div class="flex items-center space-x-2">
+    <%= link_to root_path, class: "flex items-center space-x-1 hover:opacity-80 transition" do %>
+      <svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M12 2v20M17 5v14M7 9v6"/>
+      </svg>
+      <span class="text-2xl font-extrabold text-gray-800 tracking-wide">CollabTune</span>
+    <% end %>
+  </div>
+
+  <!-- 右側ナビ -->
+  <div class="flex items-center space-x-5">
+    <!-- 検索アイコン（ダミー） -->
+    <button class="hidden sm:block p-2 rounded-full hover:bg-gray-100 transition" title="検索機能は未実装">
+      <svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" x2="16.65" y1="21" y2="16.65"/>
+      </svg>
+    </button>
+
+    <!-- 通知アイコン -->
+    <% if user_signed_in? %>
+<div class="relative">
+  <%= link_to "#", class: "p-2 rounded-full hover:bg-gray-100 transition relative",style:"display:block", title: "通知" do %>
+    <svg class="w-6 h-6 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9zm-2.45 13a1 1 0 0 1-1.1.9h-3a1 1 0 0 1-1.1-.9"/>
+    </svg>
+
+    <% unread = Message.unread_for(current_user).count rescue 0 %>
+    <span
+      id="notification-badge"
+      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full  <%= 'hidden' unless unread.positive? %>">
+      <%= unread %>
+    </span>
+  <% end %>
+</div>
+
+
+    <!-- ユーザーメニュー -->
+      <div class="relative">
+        <!-- トリガー -->
+        <button id="user-menu-button" class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition focus:outline-none" >
+          <span class="text-gray-700 font-semibold"><%= current_user.nickname %></span>
+          <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+
+        <!-- プルダウンメニュー -->
+        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+          <%= link_to "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+            プロフィール
+          <% end %>
+          <%= link_to "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+            マイページ
+          <% end %>
+          <%= link_to collaborations_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+            コラボ一覧
+          <% end %>
+          <%= link_to chat_rooms_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+            チャット一覧
+          <% end %>
+          <%= link_to new_post_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+            新規投稿
+          <% end %>
+          <div class="border-t border-gray-200"></div>
+          <%= link_to destroy_user_session_path,
+              data: { turbo_method: :delete },
+              class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+            ログアウト
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="flex space-x-3 text-sm">
+        <%= link_to "新規登録", new_user_registration_path, class: "text-gray-700 hover:text-purple-600 font-semibold transition" %>
+        <%= link_to "ログイン", new_user_session_path, class: "text-gray-700 hover:text-purple-600 font-semibold transition" %>
+      </div>
+    <% end %>
+  </div>
+</header>
+
+
+

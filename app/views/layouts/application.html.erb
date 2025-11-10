@@ -9,45 +9,27 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body data-current-user-id="<%= current_user&.id %>"
-        data-current-room-id="<%= @chat_room&.id %>">
-<header class="bg-gray-100 shadow-md px-6 py-3 flex justify-between items-center">
-  <!-- 左側：ロゴ -->
-  <h1 class="text-2xl font-extrabold text-gray-800 tracking-wide">
-    <%= link_to "CollabTune", root_path, class: "hover:text-purple-600 transition" %>
-  </h1>
+<body data-current-user-id="<%= current_user&.id %>"
+        data-current-room-id="<%= @chat_room&.id %>"
+        class="min-h-screen flex flex-col bg-gray-50 text-gray-800">
 
-  <!-- 右側：ナビゲーション -->
-  <nav class="flex flex-wrap items-center gap-3 text-gray-700 text-sm">
-    <% if user_signed_in? %>
-      <span class="text-gray-600">こんにちは、<%= current_user.nickname %> さん</span>
+    <!-- 共通ヘッダー -->
+    <%= render "shared/header" %>
 
-      <%= link_to "投稿一覧", posts_path, class: "hover:text-purple-600 transition" %>
-      <%= link_to "投稿する", new_post_path, class: "hover:text-purple-600 transition" %>
-      <%= link_to "コラボ一覧", collaborations_path, class: "hover:text-purple-600 transition" %>
-
-      <% unread = Message.unread_for(current_user).count %>
-      <% if unread.positive? %>
-        <span id="notification-badge" class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-          未読 <%= unread %>
-        </span>
-      <% end %>
-
-      <%= link_to "チャット一覧", chat_rooms_path, class: "hover:text-purple-600 transition" %>
-      <%= link_to "ログアウト", destroy_user_session_path,
-          data: { turbo_method: :delete },
-          class: "hover:text-purple-600 transition" %>
-    <% else %>
-      <%= link_to "新規登録", new_user_registration_path, class: "hover:text-purple-600 transition" %>
-      <%= link_to "ログイン", new_user_session_path, class: "hover:text-purple-600 transition" %>
+    <!-- 通知メッセージ -->
+    <% if notice.present? %>
+      <p class="bg-green-100 text-green-800 px-4 py-2 text-sm text-center"><%= notice %></p>
     <% end %>
-  </nav>
-</header>
+    <% if alert.present? %>
+      <p class="bg-red-100 text-red-800 px-4 py-2 text-sm text-center"><%= alert %></p>
+    <% end %>
 
-  <p class="notice"><%= notice %></p>
-  <p class="alert"><%= alert %></p>
-    <main class="main-content">
+    <!-- 各ページのメインコンテンツ -->
+    <main class="flex-grow container mx-auto px-4 py-6">
       <%= yield %>
     </main>
+
+    <!-- 共通フッター（後で作成） -->
+    <%= render "shared/footer" if lookup_context.exists?("shared/_footer") %>
   </body>
 </html>

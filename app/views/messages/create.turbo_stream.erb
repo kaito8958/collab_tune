@@ -1,16 +1,35 @@
 <turbo-stream action="append" target="messages">
   <template>
-    <%= render partial: "messages/message", formats: [:html], locals: { message: @message } %>
+    <%= render partial: "messages/message",
+               formats: [:html],
+               locals: {
+                 message: @message,
+                 sender_id: current_user.id # ← JSが左右判定するために送信者IDを明示
+               } %>
   </template>
 </turbo-stream>
 
 <turbo-stream action="replace" target="message_form">
   <template>
     <div id="message_form">
-      <%= form_with(model: [@chat_room, Message.new]) do |form| %>
-        <%= form.text_area :content, rows: 3 %><br>
-        <%= form.submit "送信" %>
+      <%= form_with(model: [@chat_room, Message.new],
+                    html: { id: "message_form" }) do |form| %>
+        <%= form.text_area :content, rows: 2, class: "w-full border rounded p-2" %>
+        <%= form.submit "送信",
+                        class: "mt-1 px-4 py-1 bg-purple-600 text-white rounded hover:bg-purple-700 transition" %>
       <% end %>
     </div>
+  </template>
+</turbo-stream>
+
+<turbo-stream action="invoke" target="messages">
+  <template>
+    <script>
+      // 📜 スクロールを下に固定（再描画時）
+      const messagesDiv = document.getElementById("messages");
+      if (messagesDiv) {
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      }
+    </script>
   </template>
 </turbo-stream>

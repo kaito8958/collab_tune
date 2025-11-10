@@ -12,26 +12,34 @@ export const subscribeToMessages = (chatRoomId) => {
         console.log("✅ Connected to MessageChannel");
       },
 
-      received(data) {
-        // 自分のメッセージなら無視
-        const currentUserId = document.body.dataset.currentUserId;
-        if (String(data.user_id) === currentUserId) return;
+received(data) {
+  console.log("💌 data received:", data);
 
-        // メッセージを追加表示
-        const messagesDiv = document.getElementById("messages");
-        if (messagesDiv && data.message_html) {
-          messagesDiv.insertAdjacentHTML("beforeend", data.message_html);
-        }
+  const messagesDiv = document.getElementById("messages");
+  const currentUserId = document.body.dataset.currentUserId;
 
-        // ✅ チャットルームを開いている場合は即既読APIを叩く
-        const currentRoomId = document.body.dataset.currentRoomId;
-        if (currentRoomId && data.message_id) {
-          fetch(`/messages/${data.message_id}/mark_as_read`, {
-            method: "PATCH",
-            headers: { "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content }
-          });
-        }
-      },
+  if (messagesDiv && data.message_html) {
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = data.message_html.trim();
+    const messageElement = tempDiv.firstElementChild;
+
+    const senderId = data.sender_id;
+    console.log("🧭 senderId:", senderId, "currentUserId:", currentUserId);
+
+    if (String(senderId) === String(currentUserId)) {
+      console.log("➡️ adding self class");
+      messageElement.classList.add("self");
+    } else {
+      console.log("⬅️ adding other class");
+      messageElement.classList.add("other");
+    }
+
+    console.log("✅ final element:", messageElement.outerHTML);
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+},
+
 
       disconnected() {
         console.log("❌ Disconnected from MessageChannel");

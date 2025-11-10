@@ -14,7 +14,7 @@
 
   <div class="chat-container">
     <div id="messages">
-      <%= render @messages %>
+      <%= render partial: "messages/message", collection: @messages, as: :message, locals: { sender_id: current_user.id } %>
     </div>
 
   <%= form_with(model: [@chat_room, @message], html: { id: "message_form" }) do |form| %>
@@ -23,7 +23,6 @@
   <% end %>
   </div>
 
-  <%= link_to "チャット一覧に戻る", chat_rooms_path %>
 </div>
 
 <script type="module">
