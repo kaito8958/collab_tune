@@ -12,7 +12,8 @@
 
 <body data-current-user-id="<%= current_user&.id %>"
         data-current-room-id="<%= @chat_room&.id %>"
-        class="min-h-screen flex flex-col bg-gray-50 text-gray-800">
+        class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
+
 
     <!-- 共通ヘッダー -->
     <%= render "shared/header" %>
@@ -26,7 +27,7 @@
     <% end %>
 
     <!-- 各ページのメインコンテンツ -->
-    <main class="flex-grow container mx-auto px-4 py-6">
+    <main class="flex-grow container mx-auto px-4 py-6 bg-[#E5EBF2]">
       <%= yield %>
     </main>
 
