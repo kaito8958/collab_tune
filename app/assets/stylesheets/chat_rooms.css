@@ -1,10 +1,10 @@
-html, body {
+/* html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   background-color: #f4f7f6;
-}
+} */
 
 /* === チャット全体を1画面に収める === */
 .chat-room-page {
