@@ -6,28 +6,26 @@
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
         <!-- アイコン -->
-        <div class="col-span-2">
-      <%= f.label :icon, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%# 保存済みの添付だけ表示（失敗時の一時添付はスキップ） %>
-      <% if resource.icon.attached? && resource.icon.attachment&.persisted? %>
-        <%= image_tag resource.icon.variant(resize_to_fill: [120, 120]), class: "rounded-full mb-2" %><br>
-      <% end %>
-      <%= f.file_field :icon, accept: "image/*", class: "w-full" %>
-
-
+        <div class="col-span-2 text-center">
+          <%= f.label :icon, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <% if resource.icon.attached? && resource.icon.attachment&.persisted? %>
+            <%= image_tag resource.icon.variant(resize_to_fill: [120, 120]),
+                          class: "mx-auto rounded-full shadow-md mb-3 object-cover",
+                          size: "120x120" %>
+          <% else %>
+            <%= image_tag "default_icon.png",
+                          class: "mx-auto rounded-full shadow-md mb-3 object-cover bg-gray-100",
+                          size: "120x120" %>
+          <% end %>
+          <%= f.file_field :icon, accept: "image/*", class: "w-full" %>
         </div>
 
         <!-- ニックネーム -->
-        <div>
+        <div class="col-span-2">
           <%= f.label :nickname, "ニックネーム" %>
           <%= f.text_field :nickname, class: "w-full border rounded-lg px-3 py-2" %>
-        </div>
-
-        <!-- 使用DAW -->
-        <div>
-          <%= f.label :daw, "使用DAW" %>
-          <%= f.select :daw, options_from_collection_for_select(Daw.all, :name, :name, resource.daw), { include_blank: "---" }, class: "w-full border rounded-lg px-3 py-2" %>
         </div>
 
         <!-- 自己紹介 -->
@@ -36,48 +34,68 @@
           <%= f.text_area :introduction, rows: 3, class: "w-full border rounded-lg px-3 py-2 resize-none" %>
         </div>
 
+        <!-- 使用DAW -->
+        <div class="col-span-2 md:col-span-1">
+          <%= f.label :daw, "使用DAW", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.select :daw, options_from_collection_for_select(Daw.all, :name, :name, resource.daw),
+                        { include_blank: "---" },
+                        class: "w-full border rounded-lg px-3 py-2 text-gray-600 bg-gray-50" %>
+        </div>
+
         <!-- 得意ジャンル -->
-        <div class="col-span-2">
-          <%= f.label :genres, "得意ジャンル" %><br>
-          <% Genre.all.each do |genre| %>
-            <label class="mr-4">
-              <%= check_box_tag "user[genres][]", genre.name, resource.genres.include?(genre.name) %>
-              <%= genre.name %>
-            </label>
-          <% end %>
+        <div class="col-span-2 mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">得意ジャンル</h3>
+          <div class="flex flex-wrap gap-x-4 gap-y-2">
+            <% Genre.all.each do |genre| %>
+              <label class="inline-flex items-center">
+                <%= check_box_tag "user[genres][]", genre.name, resource.genres.include?(genre.name),
+                      class: "rounded text-purple-600 focus:ring-purple-500" %>
+                <span class="ml-1 text-sm text-gray-700"><%= genre.name %></span>
+              </label>
+            <% end %>
+          </div>
         </div>
 
-        <!-- 得意パート -->
-        <div class="col-span-2">
-          <%= f.label :performance_skills, "得意パート（演奏系）" %><br>
-          <% PerformanceSkill.all.each do |skill| %>
-            <label class="mr-4">
-              <%= check_box_tag "user[performance_skills][]", skill.name, resource.performance_skills.include?(skill.name) %>
-              <%= skill.name %>
-            </label>
-          <% end %>
+        <!-- 得意パート（演奏系） -->
+        <div class="col-span-2 mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">得意パート（演奏系）</h3>
+          <div class="flex flex-wrap gap-x-4 gap-y-2">
+            <% PerformanceSkill.all.each do |skill| %>
+              <label class="inline-flex items-center">
+                <%= check_box_tag "user[performance_skills][]", skill.name, resource.performance_skills.include?(skill.name),
+                      class: "rounded text-purple-600 focus:ring-purple-500" %>
+                <span class="ml-1 text-sm text-gray-700"><%= skill.name %></span>
+              </label>
+            <% end %>
+          </div>
         </div>
 
-        <!-- 得意スキル -->
-        <div class="col-span-2">
-          <%= f.label :production_skills, "得意スキル（制作系）" %><br>
-          <% ProductionSkill.all.each do |skill| %>
-            <label class="mr-4">
-              <%= check_box_tag "user[production_skills][]", skill.name, resource.production_skills.include?(skill.name) %>
-              <%= skill.name %>
-            </label>
-          <% end %>
+        <!-- 得意スキル（制作系） -->
+        <div class="col-span-2 mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">得意スキル（制作系）</h3>
+          <div class="flex flex-wrap gap-x-4 gap-y-2">
+            <% ProductionSkill.all.each do |skill| %>
+              <label class="inline-flex items-center">
+                <%= check_box_tag "user[production_skills][]", skill.name, resource.production_skills.include?(skill.name),
+                      class: "rounded text-purple-600 focus:ring-purple-500" %>
+                <span class="ml-1 text-sm text-gray-700"><%= skill.name %></span>
+              </label>
+            <% end %>
+          </div>
         </div>
 
-        <!-- 募集スキル -->
-        <div class="col-span-2">
-          <%= f.label :looking_for_skills, "コラボで募集したいスキル" %><br>
-          <% LookingForSkill.all.each do |skill| %>
-            <label class="mr-4">
-              <%= check_box_tag "user[looking_for_skills][]", skill.name, resource.looking_for_skills.include?(skill.name) %>
-              <%= skill.name %>
-            </label>
-          <% end %>
+        <!-- コラボで募集したいスキル -->
+        <div class="col-span-2 mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">コラボで募集したいスキル</h3>
+          <div class="flex flex-wrap gap-x-4 gap-y-2">
+            <% LookingForSkill.all.each do |skill| %>
+              <label class="inline-flex items-center">
+                <%= check_box_tag "user[looking_for_skills][]", skill.name, resource.looking_for_skills.include?(skill.name),
+                      class: "rounded text-purple-600 focus:ring-purple-500" %>
+                <span class="ml-1 text-sm text-gray-700"><%= skill.name %></span>
+              </label>
+            <% end %>
+          </div>
         </div>
 
         <!-- やりたいこと -->
@@ -86,30 +104,56 @@
           <%= f.text_area :goal, rows: 2, class: "w-full border rounded-lg px-3 py-2 resize-none" %>
         </div>
 
-        <!-- 外部リンク -->
-        <div class="col-span-2">
-          <%= f.label :links, "外部リンク" %><br>
-          <%= f.label :links_youtube, "YouTube" %>
-          <%= text_field_tag :links_youtube, resource.links["youtube"], class: "w-full border rounded-lg mb-2" %>
-
-          <%= f.label :links_soundcloud, "SoundCloud" %>
-          <%= text_field_tag :links_soundcloud, resource.links["soundcloud"], class: "w-full border rounded-lg mb-2" %>
-
-          <%= f.label :links_x, "X（Twitter）" %>
-          <%= text_field_tag :links_x, resource.links["x"], class: "w-full border rounded-lg" %>
+        <!--  外部リンク -->
+        <div class="col-span-2 mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-3">🌐 外部リンク</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <%= f.label :links_youtube, "YouTube", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= text_field_tag :links_youtube, resource.links["youtube"],
+                    placeholder: "https://youtube.com/...",
+                    class: "w-full border rounded-lg px-3 py-2" %>
+            </div>
+            <div>
+              <%= f.label :links_soundcloud, "SoundCloud", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= text_field_tag :links_soundcloud, resource.links["soundcloud"],
+                    placeholder: "https://soundcloud.com/...",
+                    class: "w-full border rounded-lg px-3 py-2" %>
+            </div>
+            <div>
+              <%= f.label :links_x, "X（Twitter）", class: "block text-sm font-medium text-gray-700 mb-1" %>
+              <%= text_field_tag :links_x, resource.links["x"],
+                    placeholder: "https://x.com/...",
+                    class: "w-full border rounded-lg px-3 py-2" %>
+            </div>
+          </div>
         </div>
+
+      </div> <!-- grid 終了 -->
+
+      <!-- 現在のパスワード -->
+      <div class="mt-10 border-t pt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">現在のパスワード（変更確認用）</h3>
+        <p class="text-sm text-gray-500 mb-3">
+          プロフィールを変更する場合は、本人確認のためパスワードを入力してください。
+        </p>
+        <%= f.password_field :current_password,
+              autocomplete: "current-password",
+              placeholder: "現在のパスワード",
+              class: "w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-400" %>
       </div>
 
-      <div class="mt-8">
-        <%= f.label :current_password, "現在のパスワード（変更確認用）" %>
-        <%= f.password_field :current_password, autocomplete: "current-password", class: "w-full border rounded-lg px-3 py-2" %>
+      <!--  更新ボタン -->
+      <div class="mt-10 text-center">
+        <%= f.submit "プロフィールを更新する",
+              class: "px-8 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg transition transform hover:scale-[1.02]" %>
       </div>
-
-      <%= f.submit "更新する", class: "w-full py-3 mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md transition" %>
     <% end %>
 
-    <div class="mt-8 text-center text-sm">
-      <%= link_to "戻る", root_path, class: "text-purple-600 hover:underline" %>
+    <!-- ↩戻るボタン -->
+    <div class="mt-10 text-center">
+      <%= link_to "← 戻る", root_path,
+            class: "inline-block text-purple-600 font-medium hover:underline transition" %>
     </div>
   </div>
 </div>
