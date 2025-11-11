@@ -11,7 +11,7 @@ def configure_permitted_parameters
     :daw,
     :goal,
     :icon,
-    { performance_skills: [], production_skills: [], looking_for_skills: [], links: {} }
+    { genres: [], performance_skills: [], production_skills: [], looking_for_skills: [], links: {} }
   ]
 
   devise_parameter_sanitizer.permit(:sign_up, keys: added_attrs)

@@ -1,35 +1,78 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] px-6">
   <div class="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-10 w-full max-w-3xl border border-gray-200">
     <div class="text-center mb-6">
-      <% if @user.icon.attached? %>
-        <%= image_tag @user.icon.variant(resize_to_fill: [120, 120]), class: "mx-auto rounded-full shadow-md mb-3" %>
-      <% else %>
-        <%= image_tag "default_icon.png", class: "mx-auto rounded-full shadow-md mb-3" %>
-      <% end %>
+<% if @user.icon.attached? %>
+  <% resized_icon = @user.icon.variant(resize_to_fill: [120, 120]).processed %>
+  <%= image_tag url_for(resized_icon),
+                size: "120x120",
+                class: "mx-auto rounded-full shadow-md mb-3 object-cover" %>
+<% else %>
+  <%= image_tag "default_icon.png",
+                size: "120x120",
+                class: "mx-auto rounded-full shadow-md mb-3 object-cover bg-gray-100" %>
+<% end %>
+
+
       <h2 class="text-3xl font-extrabold text-gray-800"><%= @user.nickname %></h2>
     </div>
 
     <div class="space-y-4 text-gray-700">
-      <p><strong>🎧 使用DAW：</strong> <%= @user.daw.presence || "未設定" %></p>
+      <p><strong>使用DAW：</strong> <%= @user.daw.presence || "未設定" %></p>
+
+      <% if @user.genres.any? %>
+        <p class="font-semibold text-gray-800 mb-2">🎵 得意ジャンル：</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <% @user.genres.each do |genre| %>
+            <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+              <%= genre %>
+            </span>
+          <% end %>
+        </div>
+      <% end %>
+
 
       <% if @user.performance_skills.any? %>
-        <p><strong>🎸 得意パート：</strong> <%= @user.performance_skills.join(", ") %></p>
+        <p class="font-semibold text-gray-800 mb-2">🎸 得意パート：</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <% @user.performance_skills.each do |skill| %>
+            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+              <%= skill %>
+            </span>
+          <% end %>
+        </div>
       <% end %>
+
 
       <% if @user.production_skills.any? %>
-        <p><strong>🎛️ 得意スキル：</strong> <%= @user.production_skills.join(", ") %></p>
+        <p class="font-semibold text-gray-800 mb-2">🎛️ 制作スキル：</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <% @user.production_skills.each do |skill| %>
+            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+              <%= skill %>
+            </span>
+          <% end %>
+        </div>
       <% end %>
+
 
       <% if @user.looking_for_skills.any? %>
-        <p><strong>🤝 募集中スキル：</strong> <%= @user.looking_for_skills.join(", ") %></p>
+        <p class="font-semibold text-gray-800 mb-2">🤝 募集中のスキル：</p>
+        <div class="flex flex-wrap gap-2 mb-4">
+          <% @user.looking_for_skills.each do |skill| %>
+            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium shadow-sm">
+              <%= skill %>
+            </span>
+          <% end %>
+        </div>
       <% end %>
 
+
       <% if @user.goal.present? %>
-        <p><strong>🎯 やりたいこと：</strong><br><%= simple_format(@user.goal) %></p>
+        <p><strong>やりたいこと：</strong><br><%= simple_format(@user.goal) %></p>
       <% end %>
 
       <% if @user.introduction.present? %>
-        <p><strong>📝 自己紹介：</strong><br><%= simple_format(@user.introduction) %></p>
+        <p><strong>自己紹介：</strong><br><%= simple_format(@user.introduction) %></p>
       <% end %>
 
       <% if @user.links.present? %>

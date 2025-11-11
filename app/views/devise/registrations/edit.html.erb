@@ -8,11 +8,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- アイコン -->
         <div class="col-span-2">
-          <%= f.label :icon, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-1" %>
-          <% if resource.icon.attached? %>
-            <%= image_tag resource.icon.variant(resize_to_fill: [120, 120]), class: "rounded-full mb-2" %><br>
-          <% end %>
-          <%= f.file_field :icon, accept: "image/*", class: "w-full" %>
+      <%= f.label :icon, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%# 保存済みの添付だけ表示（失敗時の一時添付はスキップ） %>
+      <% if resource.icon.attached? && resource.icon.attachment&.persisted? %>
+        <%= image_tag resource.icon.variant(resize_to_fill: [120, 120]), class: "rounded-full mb-2" %><br>
+      <% end %>
+      <%= f.file_field :icon, accept: "image/*", class: "w-full" %>
+
+
         </div>
 
         <!-- ニックネーム -->
@@ -31,6 +34,17 @@
         <div class="col-span-2">
           <%= f.label :introduction, "自己紹介" %>
           <%= f.text_area :introduction, rows: 3, class: "w-full border rounded-lg px-3 py-2 resize-none" %>
+        </div>
+
+        <!-- 得意ジャンル -->
+        <div class="col-span-2">
+          <%= f.label :genres, "得意ジャンル" %><br>
+          <% Genre.all.each do |genre| %>
+            <label class="mr-4">
+              <%= check_box_tag "user[genres][]", genre.name, resource.genres.include?(genre.name) %>
+              <%= genre.name %>
+            </label>
+          <% end %>
         </div>
 
         <!-- 得意パート -->

@@ -26,4 +26,8 @@ class User < ApplicationRecord
   def links
     super || {}
   end
+
+  def genres
+    super || []
+  end
 end
