@@ -4,10 +4,19 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:nickname, :profile, :instrument, :genre])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:nickname, :profile, :instrument, :genre])
-  end
+def configure_permitted_parameters
+  added_attrs = [
+    :nickname,
+    :introduction,
+    :daw,
+    :goal,
+    :icon,
+    { performance_skills: [], production_skills: [], looking_for_skills: [], links: {} }
+  ]
+
+  devise_parameter_sanitizer.permit(:sign_up, keys: added_attrs)
+  devise_parameter_sanitizer.permit(:account_update, keys: added_attrs)
+end
 
   private
 

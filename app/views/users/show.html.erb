@@ -1,0 +1,52 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] px-6">
+  <div class="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-10 w-full max-w-3xl border border-gray-200">
+    <div class="text-center mb-6">
+      <% if @user.icon.attached? %>
+        <%= image_tag @user.icon.variant(resize_to_fill: [120, 120]), class: "mx-auto rounded-full shadow-md mb-3" %>
+      <% else %>
+        <%= image_tag "default_icon.png", class: "mx-auto rounded-full shadow-md mb-3" %>
+      <% end %>
+      <h2 class="text-3xl font-extrabold text-gray-800"><%= @user.nickname %></h2>
+    </div>
+
+    <div class="space-y-4 text-gray-700">
+      <p><strong>🎧 使用DAW：</strong> <%= @user.daw.presence || "未設定" %></p>
+
+      <% if @user.performance_skills.any? %>
+        <p><strong>🎸 得意パート：</strong> <%= @user.performance_skills.join(", ") %></p>
+      <% end %>
+
+      <% if @user.production_skills.any? %>
+        <p><strong>🎛️ 得意スキル：</strong> <%= @user.production_skills.join(", ") %></p>
+      <% end %>
+
+      <% if @user.looking_for_skills.any? %>
+        <p><strong>🤝 募集中スキル：</strong> <%= @user.looking_for_skills.join(", ") %></p>
+      <% end %>
+
+      <% if @user.goal.present? %>
+        <p><strong>🎯 やりたいこと：</strong><br><%= simple_format(@user.goal) %></p>
+      <% end %>
+
+      <% if @user.introduction.present? %>
+        <p><strong>📝 自己紹介：</strong><br><%= simple_format(@user.introduction) %></p>
+      <% end %>
+
+      <% if @user.links.present? %>
+        <div>
+          <strong>🔗 外部リンク：</strong><br>
+          <% @user.links.each do |platform, url| %>
+            <% next if url.blank? %>
+            <%= link_to platform.capitalize, url, target: "_blank", class: "text-purple-600 hover:underline block" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8 text-center">
+      <% if @user == current_user %>
+        <%= link_to "プロフィールを編集する", edit_user_registration_path, class: "px-4 py-2 bg-purple-600 text-white rounded-lg shadow hover:bg-purple-700 transition" %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,43 +1,101 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] px-6">
+  <div class="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-10 w-full max-w-3xl border border-gray-200">
+    <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-6">プロフィール編集</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- アイコン -->
+        <div class="col-span-2">
+          <%= f.label :icon, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <% if resource.icon.attached? %>
+            <%= image_tag resource.icon.variant(resize_to_fill: [120, 120]), class: "rounded-full mb-2" %><br>
+          <% end %>
+          <%= f.file_field :icon, accept: "image/*", class: "w-full" %>
+        </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+        <!-- ニックネーム -->
+        <div>
+          <%= f.label :nickname, "ニックネーム" %>
+          <%= f.text_field :nickname, class: "w-full border rounded-lg px-3 py-2" %>
+        </div>
 
-  <div class="field">
-    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-    <% if @minimum_password_length %>
-      <br />
-      <em><%= @minimum_password_length %> characters minimum</em>
+        <!-- 使用DAW -->
+        <div>
+          <%= f.label :daw, "使用DAW" %>
+          <%= f.select :daw, options_from_collection_for_select(Daw.all, :name, :name, resource.daw), { include_blank: "---" }, class: "w-full border rounded-lg px-3 py-2" %>
+        </div>
+
+        <!-- 自己紹介 -->
+        <div class="col-span-2">
+          <%= f.label :introduction, "自己紹介" %>
+          <%= f.text_area :introduction, rows: 3, class: "w-full border rounded-lg px-3 py-2 resize-none" %>
+        </div>
+
+        <!-- 得意パート -->
+        <div class="col-span-2">
+          <%= f.label :performance_skills, "得意パート（演奏系）" %><br>
+          <% PerformanceSkill.all.each do |skill| %>
+            <label class="mr-4">
+              <%= check_box_tag "user[performance_skills][]", skill.name, resource.performance_skills.include?(skill.name) %>
+              <%= skill.name %>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- 得意スキル -->
+        <div class="col-span-2">
+          <%= f.label :production_skills, "得意スキル（制作系）" %><br>
+          <% ProductionSkill.all.each do |skill| %>
+            <label class="mr-4">
+              <%= check_box_tag "user[production_skills][]", skill.name, resource.production_skills.include?(skill.name) %>
+              <%= skill.name %>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- 募集スキル -->
+        <div class="col-span-2">
+          <%= f.label :looking_for_skills, "コラボで募集したいスキル" %><br>
+          <% LookingForSkill.all.each do |skill| %>
+            <label class="mr-4">
+              <%= check_box_tag "user[looking_for_skills][]", skill.name, resource.looking_for_skills.include?(skill.name) %>
+              <%= skill.name %>
+            </label>
+          <% end %>
+        </div>
+
+        <!-- やりたいこと -->
+        <div class="col-span-2">
+          <%= f.label :goal, "やりたいこと・方向性" %>
+          <%= f.text_area :goal, rows: 2, class: "w-full border rounded-lg px-3 py-2 resize-none" %>
+        </div>
+
+        <!-- 外部リンク -->
+        <div class="col-span-2">
+          <%= f.label :links, "外部リンク" %><br>
+          <%= f.label :links_youtube, "YouTube" %>
+          <%= text_field_tag :links_youtube, resource.links["youtube"], class: "w-full border rounded-lg mb-2" %>
+
+          <%= f.label :links_soundcloud, "SoundCloud" %>
+          <%= text_field_tag :links_soundcloud, resource.links["soundcloud"], class: "w-full border rounded-lg mb-2" %>
+
+          <%= f.label :links_x, "X（Twitter）" %>
+          <%= text_field_tag :links_x, resource.links["x"], class: "w-full border rounded-lg" %>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <%= f.label :current_password, "現在のパスワード（変更確認用）" %>
+        <%= f.password_field :current_password, autocomplete: "current-password", class: "w-full border rounded-lg px-3 py-2" %>
+      </div>
+
+      <%= f.submit "更新する", class: "w-full py-3 mt-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-md transition" %>
     <% end %>
+
+    <div class="mt-8 text-center text-sm">
+      <%= link_to "戻る", root_path, class: "text-purple-600 hover:underline" %>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</div>

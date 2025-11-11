@@ -11,3 +11,13 @@ ja:
       invalid: "メールアドレスまたはパスワードが正しくありません。"
       unauthenticated: "ログインしてください。"
       already_authenticated: "すでにログインしています。"
+    errors:
+    messages:
+        not_saved: "保存に失敗しました。入力内容を確認してください。"
+    activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            current_password:
+              blank: "現在のパスワードを入力してください"
