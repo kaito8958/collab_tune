@@ -1,50 +1,89 @@
-<h2>コラボ申請一覧</h2>
+<div class="min-h-screen bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] py-10 px-4">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-10">コラボ申請一覧</h2>
 
-<h3>送信した申請</h3>
-<% if @sent_collaborations.any? %>
-  <ul>
-    <% @sent_collaborations.each do |collab| %>
-      <li style="margin-bottom: 1em;">
-        <strong>宛先:</strong> <%= collab.receiver.nickname %>（<%= collab.post.title %>）<br>
-        <strong>ステータス:</strong> <%= collab.status %><br>
-        <strong>メッセージ:</strong> <%= collab.message %><br>
+    <div class="grid md:grid-cols-2 gap-8">
+      <!-- 送信した申請 -->
+      <div class="bg-white/90 backdrop-blur-md shadow-md rounded-2xl border border-gray-200 p-6">
+        <h3 class="text-xl font-bold text-purple-700 mb-4">📤 送信した申請</h3>
 
-        <% if collab.status == "accepted" && collab.chat_room.present? %>
-          <%= link_to "チャットへ", chat_room_path(collab.chat_room), class: "btn btn-primary", style: "margin-top: 5px;" %>
-        <% elsif collab.status == "pending" %>
-          <em>（承認待ち）</em>
+        <% if @sent_collaborations.any? %>
+          <% @sent_collaborations.each do |collab| %>
+            <div class="border border-gray-200 rounded-xl p-4 mb-4 hover:shadow-lg transition">
+              <p class="text-gray-700 text-sm mb-1">
+                <strong>宛先:</strong> <%= collab.receiver.nickname %>（<%= collab.post.title %>）
+              </p>
+              <p class="text-sm mb-2">
+                <strong>メッセージ:</strong>
+                <span class="inline-block bg-purple-50 px-3 py-1 rounded-lg text-gray-700"><%= collab.message %></span>
+              </p>
+
+              <% status_class = case collab.status
+                when "accepted" then "bg-green-100 text-green-700"
+                when "rejected" then "bg-red-100 text-red-700"
+                else "bg-yellow-100 text-yellow-700"
+              end %>
+
+              <span class="text-xs font-semibold px-3 py-1 rounded-full <%= status_class %>">
+                <%= collab.status == "pending" ? "承認待ち" : collab.status == "accepted" ? "承認済み" : "拒否済み" %>
+              </span>
+
+              <% if collab.status == "accepted" && collab.chat_room.present? %>
+                <div class="mt-3">
+                  <%= link_to "チャットへ", chat_room_path(collab.chat_room),
+                      class: "inline-block px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white text-sm font-semibold rounded-full shadow-md" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
         <% else %>
-          <em>（<%= collab.status == "rejected" ? "拒否されました" : "不明な状態" %>）</em>
+          <p class="text-gray-500 text-sm">送信した申請はありません。</p>
         <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>送信した申請はありません。</p>
-<% end %>
+      </div>
 
-<hr>
+      <!-- 受信した申請 -->
+      <div class="bg-white/90 backdrop-blur-md shadow-md rounded-2xl border border-gray-200 p-6">
+        <h3 class="text-xl font-bold text-indigo-700 mb-4">📥 受信した申請</h3>
 
-<h3>受信した申請</h3>
-<% if @received_collaborations.any? %>
-  <ul>
-    <% @received_collaborations.each do |collab| %>
-      <li style="margin-bottom: 1em;">
-        <strong>送信者:</strong> <%= collab.requester.nickname %>（<%= collab.post.title %>）<br>
-        <strong>ステータス:</strong> <%= collab.status %><br>
-        <strong>メッセージ:</strong> <%= collab.message %><br>
+        <% if @received_collaborations.any? %>
+          <% @received_collaborations.each do |collab| %>
+            <div class="border border-gray-200 rounded-xl p-4 mb-4 hover:shadow-lg transition">
+              <p class="text-gray-700 text-sm mb-1">
+                <strong>送信者:</strong> <%= collab.requester.nickname %>（<%= collab.post.title %>）
+              </p>
+              <p class="text-sm mb-2">
+                <strong>メッセージ:</strong>
+                <span class="inline-block bg-indigo-50 px-3 py-1 rounded-lg text-gray-700"><%= collab.message %></span>
+              </p>
 
-        <% if collab.status == "pending" %>
-          <%= button_to "承認", collaboration_path(collab, status: "accepted"), method: :patch, class: "btn btn-success", style: "margin-right:5px;" %>
-          <%= button_to "拒否", collaboration_path(collab, status: "rejected"), method: :patch, class: "btn btn-danger" %>
-        <% elsif collab.status == "accepted" && collab.chat_room.present? %>
-          <%= link_to "チャットへ", chat_room_path(collab.chat_room), class: "btn btn-primary", style: "margin-top: 5px;" %>
+              <% if collab.status == "pending" %>
+                <div class="flex space-x-3 mt-2">
+                  <%= button_to "承認",
+                        collaboration_path(collab, status: "accepted"),
+                        method: :patch,
+                        class: "flex-1 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg shadow-md transition" %>
+
+                  <%= button_to "拒否",
+                        collaboration_path(collab, status: "rejected"),
+                        method: :patch,
+                        class: "flex-1 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg shadow-md transition" %>
+                </div>
+              <% elsif collab.status == "accepted" && collab.chat_room.present? %>
+                <div class="mt-3">
+                  <%= link_to "チャットへ", chat_room_path(collab.chat_room),
+                      class: "inline-block px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-semibold rounded-full shadow-md" %>
+                </div>
+              <% else %>
+                <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-600">
+                  <%= collab.status == "rejected" ? "拒否済み" : "承認済み" %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
         <% else %>
-          <em>（<%= collab.status == "rejected" ? "拒否済み" : "承認済み" %>）</em>
+          <p class="text-gray-500 text-sm">受信した申請はありません。</p>
         <% end %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>受信した申請はありません。</p>
-<% end %>
+      </div>
+    </div>
+  </div>
+</div>

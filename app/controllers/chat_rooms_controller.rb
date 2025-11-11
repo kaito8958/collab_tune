@@ -34,9 +34,9 @@ def show
   ActionCable.server.broadcast("notifications_#{current_user.id}", {
     unread_count: unread_count
   })
+  @sender_id = current_user.id
 end
 
-  # 手動でルームを作る（テスト用）
   def create
     @chat_room = ChatRoom.new(chat_room_params)
     if @chat_room.save

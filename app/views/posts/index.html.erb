@@ -1,11 +1,31 @@
-<h2>投稿一覧</h2>
-    <hr>
-<% @posts.each do |post| %>
-  <div class="post">
-    <h3><%= link_to post.title, post_path(post) %></h3>
-    <p><%= post.description %></p>
-    <p>ジャンル: <%= post.genre.presence || "未設定" %></p>
-    <p>投稿者: <%= post.user.nickname %></p>
-    <hr>
-  </div>
+<!--  ヒーロー（未ログイン時のみ表示） -->
+<% unless user_signed_in? %>
+  <section class="bg-gradient-to-r from-purple-50 to-indigo-50 py-12 text-center">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-3">コラボで広がる音の世界。</h1>
+    <p class="text-gray-600 mb-6">CollabTuneは、DTMクリエイターが繋がり、共に曲を作るためのコミュニティです。</p>
+    <%= link_to "新規登録してはじめる", new_user_registration_path,
+        class: "bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition" %>
+  </section>
 <% end %>
+
+<!--  投稿一覧（全員表示） -->
+<section class="max-w-6xl mx-auto px-6 py-12">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">🎧 最新のコラボ募集</h2>
+
+  <div class="flex flex-col items-center space-y-6">
+  <%= render partial: "post_card", collection: @posts, as: :post %>  </div>
+</section>
+
+<!--  CTA（未ログイン時のみ） -->
+<% unless user_signed_in? %>
+  <section class="bg-purple-50 py-10 text-center">
+    <h2 class="text-xl font-bold text-gray-700 mb-3">あなたの音を誰かと繋げよう</h2>
+    <%= link_to "今すぐ登録する", new_user_registration_path,
+        class: "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition" %>
+  </section>
+<% end %>
+
+
+
+
+

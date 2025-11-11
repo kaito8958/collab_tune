@@ -1,28 +1,76 @@
-<h2>チャット一覧</h2>
-<hr>
+<div class="min-h-screen bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] py-10 px-4">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-10">💬 チャット一覧</h2>
 
-<% if @chat_rooms.any? %>
-  <ul>
-    <% @chat_rooms.each do |room| %>
-      <% collab = room.collaboration %>
-      <% partner = room.requester == current_user ? room.receiver : room.requester %>
-      <% unread_count = room.messages
-                            .where.not(user_id: current_user.id)
-                            .where(read: false)
-                            .count %>
+    <% if @chat_rooms.any? %>
+      <div class="space-y-6">
+        <% @chat_rooms.each do |room| %>
+          <% collab = room.collaboration %>
+          <% partner = room.requester == current_user ? room.receiver : room.requester %>
+          <% unread_count = room.messages.where.not(user_id: current_user.id).where(read: false).count %>
 
-      <li style="margin-bottom: 10px;">
-        <strong>相手:</strong> <%= partner.nickname %><br>
-        <strong>対象投稿:</strong> <%= collab.post.title if collab.post.present? %><br>
+          <div class="bg-white/90 backdrop-blur-md border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 flex items-center space-x-5">
+            <!-- 🎧 左：曲アイコン（円形） -->
+            <div class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+            </div>
 
-        <% if unread_count > 0 %>
-          <span style="color:red; font-weight:bold;">未読: <%= unread_count %> 件</span><br>
+            <!-- 💬 中央：情報 -->
+            <div class="flex-grow">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-lg font-semibold text-gray-800"><%= partner.nickname %></p>
+                  <p class="text-xs text-gray-500">とのチャット</p>
+                </div>
+
+                <% if unread_count > 0 %>
+                  <span class="inline-block bg-red-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">
+                    未読 <%= unread_count %>
+                  </span>
+                <% else %>
+                  <span class="inline-block bg-gray-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">
+                    既読
+                  </span>
+                <% end %>
+              </div>
+
+              <% if collab.post.present? %>
+                <div class="mt-3">
+                  <p class="text-sm text-gray-500">🎵 対象投稿</p>
+                  <p class="text-base font-semibold text-purple-700"><%= collab.post.title %></p>
+                  <% if collab.post.description.present? %>
+                    <p class="text-xs text-gray-500 line-clamp-1"><%= collab.post.description %></p>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <p class="text-xs text-gray-400 mt-2">
+                🕓 最終更新：
+                <% if room.messages.any? %>
+                  <%= time_ago_in_words(room.messages.last.created_at) %>前
+                <% else %>
+                  まだメッセージなし
+                <% end %>
+              </p>
+            </div>
+
+            <!-- 🔗 右：ボタン -->
+            <div class="flex-shrink-0">
+              <%= link_to chat_room_path(room),
+                  class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm rounded-full shadow-md hover:from-purple-700 hover:to-indigo-700 hover:shadow-lg transition whitespace-nowrap" do %>
+                開く →
+              <% end %>
+            </div>
+          </div>
         <% end %>
-
-        <%= link_to "チャットを開く", chat_room_path(room), class: "btn btn-primary", style: "margin-top: 5px;" %>
-      </li>
+      </div>
+    <% else %>
+      <div class="text-center text-gray-600 bg-white/70 backdrop-blur-md py-10 rounded-2xl border border-gray-200 shadow-sm">
+        <p class="text-lg">まだチャットルームはありません。</p>
+        <p class="text-sm mt-2">コラボが成立するとここに表示されます 🎶</p>
+      </div>
     <% end %>
-  </ul>
-<% else %>
-  <p>チャットルームはまだありません。</p>
-<% end %>
+  </div>
+</div>

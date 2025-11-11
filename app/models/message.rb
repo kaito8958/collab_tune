@@ -21,13 +21,17 @@ class Message < ApplicationRecord
         message_html: ApplicationController.render(
           partial: "messages/message",
           formats: [:html],
-          locals: { message: self, current_user: user }
+          locals: {
+            message: self,
+            sender_id: user_id 
+          }
         ),
-        message_id: id, # ✅ 追加：既読APIで使用
-        user_id: user.id
+        message_id: id,
+        sender_id: user_id
       }
     )
   end
+
 
   def broadcast_notification
     recipient_id =

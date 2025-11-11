@@ -14,4 +14,22 @@
  *= require_self
  *= require chat_rooms
  */
+.glow-effect {
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.45), 0 0 30px rgba(99, 102, 241, 0.35);
+  border-color: rgba(139, 92, 246, 0.5);
+  transition: box-shadow 0.5s ease, border-color 0.5s ease;
+}
 
+.flash-message {
+  animation: fadeIn 0.3s ease-out, fadeOut 0.3s ease-in 4s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}

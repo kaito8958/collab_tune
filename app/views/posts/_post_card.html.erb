@@ -1,0 +1,63 @@
+<div id="post-card-<%= post.id %>" class="w-full max-w-4xl bg-white rounded-2xl shadow-md border border-gray-200 hover:shadow-lg hover:border-purple-300 transition-all duration-300 mx-auto mb-8 p-6">
+
+  <!-- 上段：タイトル / ユーザー / ジャンル -->
+  <div class="flex justify-between items-start mb-4">
+    <div>
+      <h3 class="text-2xl font-bold text-gray-800 tracking-tight">
+        <%= link_to post.title, post_path(post), class: "hover:text-purple-600 transition-colors duration-200" %>
+      </h3>
+      <p class="text-sm text-gray-500 mt-1">
+        by <%= link_to post.user.nickname, user_path(post.user), class: "hover:underline hover:text-purple-500" %>
+      </p>
+    </div>
+
+    <!-- 💎 ジャンルバッジ -->
+    <div class="text-sm font-semibold text-white px-4 py-1.5 rounded-full shadow-md bg-gradient-to-r from-orange-400 to-pink-400 whitespace-nowrap">
+      <%= post.genre.presence || "ジャンル未設定" %>
+    </div>
+  </div>
+
+  <!-- 🎧 再生バー -->
+  <div class="flex items-center space-x-4 bg-gray-100 rounded-xl p-4 mb-4 <%= 'opacity-60 cursor-not-allowed' unless post.audio.attached? %>">
+    <button
+      id="btn-<%= post.id %>"
+      onclick="togglePlay(<%= post.id %>)"
+      class="bg-purple-600 hover:bg-purple-700 text-white rounded-full p-4 shadow-md flex-shrink-0 transition transform hover:scale-105"
+      aria-label="再生"
+      <%= 'disabled' unless post.audio.attached? %>>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-white" viewBox="0 0 24 24">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+    </button>
+
+    <div class="flex-grow h-2 bg-gray-300/60 rounded-full relative overflow-hidden">
+      <div id="progress-<%= post.id %>" class="absolute top-0 left-0 h-2 rounded-full w-0 transition-all duration-100" style="background: linear-gradient(90deg, #a855f7, #6366f1);"></div>
+    </div>
+
+    <p id="time-<%= post.id %>" class="text-xs text-gray-500 ml-2 whitespace-nowrap">0:00 / 0:00</p>
+  </div>
+
+  <% if post.audio.attached? %>
+    <audio id="audio-<%= post.id %>" src="<%= url_for(post.audio) %>"></audio>
+  <% end %>
+
+  <!-- 説明文 -->
+  <p class="text-gray-700 text-sm leading-relaxed mb-5">
+    <%= truncate(post.description, length: 120) %>
+  </p>
+
+  <!-- 下段：コメント数 / 詳細ボタン -->
+  <div class="flex justify-between items-center text-sm text-gray-600">
+    <div class="flex items-center space-x-2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 24 24">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span><%= post.comments.count %> コメント</span>
+    </div>
+
+    <%= link_to post_path(post),
+      class: "inline-block px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold rounded-full shadow-md hover:from-purple-700 hover:to-indigo-700 hover:shadow-lg transition-all" do %>
+      詳細を見る →
+    <% end %>
+  </div>
+</div>
