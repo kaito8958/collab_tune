@@ -37,7 +37,6 @@ def show
   @sender_id = current_user.id
 end
 
-  # 手動でルームを作る（テスト用）
   def create
     @chat_room = ChatRoom.new(chat_room_params)
     if @chat_room.save

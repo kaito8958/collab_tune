@@ -14,17 +14,10 @@
         data-current-room-id="<%= @chat_room&.id %>"
         class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
 
-
+    <!-- トーストメッセージ -->
+    <%= render "shared/flash" %> 
     <!-- 共通ヘッダー -->
     <%= render "shared/header" %>
-
-    <!-- 通知メッセージ -->
-    <% if notice.present? %>
-      <p class="bg-green-100 text-green-800 px-4 py-2 text-sm text-center"><%= notice %></p>
-    <% end %>
-    <% if alert.present? %>
-      <p class="bg-red-100 text-red-800 px-4 py-2 text-sm text-center"><%= alert %></p>
-    <% end %>
 
     <!-- 各ページのメインコンテンツ -->
     <main class="flex-grow container mx-auto px-4 py-6 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
