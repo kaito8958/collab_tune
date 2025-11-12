@@ -5,7 +5,12 @@ Rails.application.routes.draw do
   get 'chat_rooms/show'
   get 'chat_rooms/create'
   devise_for :users
-  resources :users, only: [:show]
+  resources :users, only: [:show] do
+    member do
+      get :posts   # ← 追加（/users/:id/posts）
+    end
+  end
+
   root "posts#index"  
 
   resources :posts do
@@ -18,7 +23,6 @@ Rails.application.routes.draw do
     resources :messages, only: [:create]
   end
 
-  # ✅ ここを追加（既読API）
   resources :messages, only: [] do
     patch :mark_as_read, on: :member
   end

@@ -17,7 +17,22 @@
       <% if @user.daw.present? %>
         <p class="text-sm text-gray-500 mt-1">使用DAW：<%= @user.daw %></p>
       <% end %>
+      <% if current_user == @user %>
+        <!-- 自分のプロフィール時 -->
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
+    <%= link_to "マイページ（自分の投稿）", posts_user_path(@user),
+        class: "inline-block text-center bg-[#4CAAEF] text-white px-8 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-[#3B9ADE] transition transform hover:scale-[1.03] min-w-[220px]" %>
+
+    <%= link_to "プロフィールを編集する", edit_user_registration_path,
+        class: "inline-block text-center bg-[#4CAAEF] text-white px-8 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-[#3B9ADE] transition transform hover:scale-[1.03] min-w-[220px]" %>
+  </div>
+      <% else %>
+        <!-- 他人のプロフィール時 -->
+        <%= link_to "この人の投稿を見る", posts_user_path(@user),
+            class: "inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:from-purple-700 hover:to-indigo-700 transition transform hover:scale-[1.02]" %>
+      <% end %>
     </div>
+
 
     <!-- 自己紹介 -->
     <% if @user.introduction.present? %>
@@ -100,35 +115,35 @@
         </div>
       </div>
     <% end %>
-<!-- 💫 コラボ実績 -->
-<% if @user.received_collaborations.any? || @user.sent_collaborations.any? %>
-  <div class="mt-10 border-t pt-6">
-    <h3 class="text-xl font-semibold text-gray-800 mb-4">💫 コラボ実績</h3>
+    <!-- 💫 コラボ実績 -->
+    <% if @user.received_collaborations.any? || @user.sent_collaborations.any? %>
+      <div class="mt-10 border-t pt-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">💫 コラボ実績</h3>
 
-    <% collaborations = (@user.received_collaborations + @user.sent_collaborations).uniq %>
+        <% collaborations = (@user.received_collaborations + @user.sent_collaborations).uniq %>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <% collaborations.each do |collab| %>
-        <div class="p-4 bg-gray-50 rounded-xl shadow-sm border hover:shadow-md transition">
-          <p class="text-gray-700 font-medium">
-            🎵 <%= link_to collab.post.title, post_path(collab.post), class: "text-purple-700 hover:underline" %>
-          </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <% collaborations.each do |collab| %>
+            <div class="p-4 bg-gray-50 rounded-xl shadow-sm border hover:shadow-md transition">
+              <p class="text-gray-700 font-medium">
+                🎵 <%= link_to collab.post.title, post_path(collab.post), class: "text-purple-700 hover:underline" %>
+              </p>
 
-          <% partner = collab.requester == @user ? collab.receiver : collab.requester %>
-          <p class="text-sm text-gray-600 mt-1">
-            👥 相手：<%= link_to partner.nickname, user_path(partner), class: "text-blue-600 hover:underline" %>
-          </p>
+              <% partner = collab.requester == @user ? collab.receiver : collab.requester %>
+              <p class="text-sm text-gray-600 mt-1">
+                👥 相手：<%= link_to partner.nickname, user_path(partner), class: "text-blue-600 hover:underline" %>
+              </p>
 
-          <% if collab.created_at.present? %>
-            <p class="text-xs text-gray-400 mt-1">
-              更新：<%= time_ago_in_words(collab.updated_at) %>前
-            </p>
+              <% if collab.created_at.present? %>
+                <p class="text-xs text-gray-400 mt-1">
+                  更新：<%= time_ago_in_words(collab.updated_at) %>前
+                </p>
+              <% end %>
+            </div>
           <% end %>
         </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
+      </div>
+    <% end %>
 
   </div>
 </div>
