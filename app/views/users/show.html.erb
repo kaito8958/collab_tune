@@ -1,0 +1,149 @@
+<div class="min-h-screen bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] py-10 px-6 flex justify-center">
+  <div class="bg-white/90 backdrop-blur-md shadow-2xl rounded-3xl p-10 w-full max-w-3xl border border-gray-200">
+
+    <!-- ヘッダー：アイコン＋名前 -->
+    <div class="text-center mb-10">
+      <% if @user.icon.attached? %>
+        <%= image_tag url_for(@user.icon.variant(resize_to_fill: [120, 120]).processed),
+                      class: "mx-auto rounded-full shadow-md mb-4 object-cover",
+                      size: "120x120" %>
+      <% else %>
+        <%= image_tag "default_icon.png",
+                      size: "120x120",
+                      class: "mx-auto rounded-full shadow-md mb-4 object-cover bg-gray-100" %>
+      <% end %>
+
+      <h2 class="text-3xl font-extrabold text-gray-800"><%= @user.nickname %></h2>
+      <% if @user.daw.present? %>
+        <p class="text-sm text-gray-500 mt-1">使用DAW：<%= @user.daw %></p>
+      <% end %>
+      <% if current_user == @user %>
+        <!-- 自分のプロフィール時 -->
+  <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
+    <%= link_to "マイページ（自分の投稿）", posts_user_path(@user),
+        class: "inline-block text-center bg-[#4CAAEF] text-white px-8 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-[#3B9ADE] transition transform hover:scale-[1.03] min-w-[220px]" %>
+
+    <%= link_to "プロフィールを編集する", edit_user_registration_path,
+        class: "inline-block text-center bg-[#4CAAEF] text-white px-8 py-3 rounded-full text-sm font-semibold shadow-md hover:bg-[#3B9ADE] transition transform hover:scale-[1.03] min-w-[220px]" %>
+  </div>
+      <% else %>
+        <!-- 他人のプロフィール時 -->
+        <%= link_to "この人の投稿を見る", posts_user_path(@user),
+            class: "inline-block bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-full text-sm font-semibold shadow-md hover:from-purple-700 hover:to-indigo-700 transition transform hover:scale-[1.02]" %>
+      <% end %>
+    </div>
+
+
+    <!-- 自己紹介 -->
+    <% if @user.introduction.present? %>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">🗒 自己紹介</h3>
+        <p class="text-gray-700 leading-relaxed whitespace-pre-line"><%= @user.introduction %></p>
+      </div>
+    <% end %>
+
+    <!-- 得意ジャンル -->
+    <% if @user.genres.present? && @user.genres.any? %>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">🎵 得意ジャンル</h3>
+        <div class="flex flex-wrap gap-2">
+          <% @user.genres.each do |genre| %>
+            <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm"><%= genre %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- 得意スキル -->
+    <% if @user.production_skills.present? && @user.production_skills.any? %>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">🎛️ 得意スキル</h3>
+        <div class="flex flex-wrap gap-2">
+          <% @user.production_skills.each do |skill| %>
+            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"><%= skill %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- 得意パート -->
+    <% if @user.performance_skills.present? && @user.performance_skills.any? %>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">🎸 得意パート</h3>
+        <div class="flex flex-wrap gap-2">
+          <% @user.performance_skills.each do |part| %>
+            <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"><%= part %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- 募集スキル -->
+    <% if @user.looking_for_skills.present? && @user.looking_for_skills.any? %>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-3">🤝 コラボ募集中スキル</h3>
+        <div class="flex flex-wrap gap-2">
+          <% @user.looking_for_skills.each do |skill| %>
+            <span class="px-3 py-1 bg-pink-100 text-pink-800 rounded-full text-sm"><%= skill %></span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- 目標 -->
+    <% if @user.goal.present? %>
+      <div class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">🚀 やりたいこと・方向性</h3>
+        <p class="text-gray-700 leading-relaxed whitespace-pre-line"><%= @user.goal %></p>
+      </div>
+    <% end %>
+
+    <!-- 外部リンク -->
+    <% if @user.links.present? && @user.links.any? %>
+      <div class="border-t pt-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">🌐 外部リンク</h3>
+        <div class="flex flex-wrap justify-center gap-4 text-sm">
+          <% if @user.links["youtube"].present? %>
+            <a href="<%= @user.links["youtube"] %>" target="_blank" class="text-red-600 hover:underline font-medium">YouTube</a>
+          <% end %>
+          <% if @user.links["soundcloud"].present? %>
+            <a href="<%= @user.links["soundcloud"] %>" target="_blank" class="text-orange-500 hover:underline font-medium">SoundCloud</a>
+          <% end %>
+          <% if @user.links["x"].present? %>
+            <a href="<%= @user.links["x"] %>" target="_blank" class="text-blue-600 hover:underline font-medium">X（Twitter）</a>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    <!-- 💫 コラボ実績 -->
+    <% if @user.received_collaborations.any? || @user.sent_collaborations.any? %>
+      <div class="mt-10 border-t pt-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">💫 コラボ実績</h3>
+
+        <% collaborations = (@user.received_collaborations + @user.sent_collaborations).uniq %>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <% collaborations.each do |collab| %>
+            <div class="p-4 bg-gray-50 rounded-xl shadow-sm border hover:shadow-md transition">
+              <p class="text-gray-700 font-medium">
+                🎵 <%= link_to collab.post.title, post_path(collab.post), class: "text-purple-700 hover:underline" %>
+              </p>
+
+              <% partner = collab.requester == @user ? collab.receiver : collab.requester %>
+              <p class="text-sm text-gray-600 mt-1">
+                👥 相手：<%= link_to partner.nickname, user_path(partner), class: "text-blue-600 hover:underline" %>
+              </p>
+
+              <% if collab.created_at.present? %>
+                <p class="text-xs text-gray-400 mt-1">
+                  更新：<%= time_ago_in_words(collab.updated_at) %>前
+                </p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

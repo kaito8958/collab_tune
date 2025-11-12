@@ -49,10 +49,10 @@
 
         <!-- プルダウンメニュー -->
         <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
-          <%= link_to "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+          <%= link_to user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
             プロフィール
           <% end %>
-          <%= link_to "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+          <%= link_to posts_user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
             マイページ
           <% end %>
           <%= link_to collaborations_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
