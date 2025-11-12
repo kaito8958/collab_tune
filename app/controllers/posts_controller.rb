@@ -7,7 +7,9 @@ class PostsController < ApplicationController
     @posts = Post.includes(:user).order(created_at: :desc)
   end
 
-  def show; end
+  def show
+    @comments = @post.comments.order(created_at: :desc)
+  end
 
   def new
     @post = Post.new

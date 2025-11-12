@@ -79,9 +79,13 @@
             </p>
 
             <% if @post.looking_for_skills.present? %>
-              <div>
-                <p class="text-sm text-gray-600 mb-1 font-semibold">募集パート：</p>
-                <p class="text-sm text-gray-800"><%= @post.looking_for_skills.map(&:name).join(" / ") %></p>
+              <p class="text-sm font-semibold text-gray-700 mb-2">🎸 募集中のパート：</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <% @post.looking_for_skills.each do |skill| %>
+                  <span class="text-xs font-medium text-gray-700 bg-gray-100 border border-gray-200 rounded-full px-2.5 py-0.5">
+                    <%= skill.name %>
+                  </span>
+                <% end %>
               </div>
             <% end %>
 
@@ -101,11 +105,11 @@
     <!-- 投稿者本人用 -->
     <% if user_signed_in? && current_user == @post.user %>
       <div class="mt-8 flex justify-center space-x-4">
-        <%= link_to "✏️ 編集",
+        <%= link_to "編集",
             edit_post_path(@post),
             class: "px-4 py-2 text-sm font-semibold text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition" %>
 
-        <%= link_to "🗑️ 削除",
+        <%= link_to "削除",
             @post,
             data: { turbo_method: :delete, turbo_confirm: "本当に削除しますか？" },
             class: "px-4 py-2 text-sm font-semibold text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition" %>
@@ -155,12 +159,15 @@
 
     <% if @post.comments.any? %>
       <div class="space-y-3 mb-6">
-        <% @post.comments.each do |comment| %>
+        <% @comments.each do |comment| %>
           <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
             <p class="text-gray-700 text-sm"><%= comment.body %></p>
-            <p class="text-xs text-gray-500 mt-1">by <%= comment.user.nickname %></p>
+            <p class="text-xs text-gray-500 mt-1">
+              by <%= comment.user.nickname %> ・ <%= time_ago_in_words(comment.created_at) %>
+            </p>
           </div>
         <% end %>
+
       </div>
     <% else %>
       <p class="text-sm text-gray-500 mb-6">まだコメントはありません。</p>
@@ -182,6 +189,6 @@
 
   <!-- 戻る -->
   <div class="mt-10 text-center">
-    <%= link_to "← 一覧に戻る", posts_path, class: "text-sm text-purple-600 hover:underline" %>
+    <%= link_to "← トップに戻る", posts_path, class: "text-sm text-purple-600 hover:underline" %>
   </div>
 </div>
