@@ -7,10 +7,14 @@
       <div class="flex justify-between items-center text-sm text-gray-600">
         <span>by 
           <%= link_to @post.user.nickname, user_path(@post.user), class: "font-semibold text-purple-600 hover:underline" %>
-        </span>
         <span class="px-3 py-1 bg-gradient-to-r from-orange-400 to-pink-400 text-white text-xs font-semibold rounded-full shadow-sm">
-          <%= @post.genre.presence || "ジャンル未設定" %>
+          <% if @post.genres.present? %>
+            <%= @post.genres.map(&:name).join(" / ") %>
+          <% else %>
+            ジャンル未設定
+          <% end %>
         </span>
+
       </div>
     </div>
 

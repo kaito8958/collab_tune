@@ -13,7 +13,11 @@
 
     <!-- 💎 ジャンルバッジ -->
     <div class="text-sm font-semibold text-white px-4 py-1.5 rounded-full shadow-md bg-gradient-to-r from-orange-400 to-pink-400 whitespace-nowrap">
-      <%= post.genre.presence || "ジャンル未設定" %>
+      <% if post.genres.present? %>
+        <%= post.genres.map(&:name).join(" / ") %>
+      <% else %>
+        ジャンル未設定
+      <% end %>
     </div>
   </div>
 

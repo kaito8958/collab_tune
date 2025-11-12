@@ -47,7 +47,16 @@ class PostsController < ApplicationController
     redirect_to posts_path, alert: "権限がありません。" unless @post.user == current_user
   end
 
-  def post_params
-    params.require(:post).permit(:title, :description, :genre, :tempo, :audio)
-  end
+def post_params
+  params.require(:post).permit(
+    :title,
+    :description,
+    :audio,
+    :tempo,
+    :status,
+    :recruiting_details,
+    looking_for_skill_ids: [],
+    genre_ids: []
+  )
+end
 end
