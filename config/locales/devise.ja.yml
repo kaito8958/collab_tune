@@ -4,7 +4,7 @@ ja:
       signed_in: "ログインしました。"
       signed_out: "ログアウトしました。"
     registrations:
-      signed_up: "CollabTuneへようこそ！"
+      signed_up: "CollabTuneへようこそ！まずはプロフィールを編集してみましょう✨"
       updated: "プロフィールを更新しました。"
       destroyed: "アカウントを削除しました。"
     failure:
