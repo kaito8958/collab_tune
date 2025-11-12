@@ -1,75 +1,84 @@
 <div class="min-h-screen bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] py-10 px-4">
-  <div class="max-w-3xl mx-auto">
-    <h2 class="text-3xl font-extrabold text-center text-gray-800 mb-10">チャット一覧</h2>
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-2xl font-extrabold text-center text-gray-800 mb-8">チャット一覧</h2>
 
     <% if @chat_rooms.any? %>
-      <div class="space-y-6">
+      <div class="space-y-5">
         <% @chat_rooms.each do |room| %>
-          <% collab = room.collaboration %>
           <% partner = room.requester == current_user ? room.receiver : room.requester %>
+          <% collab = room.collaboration %>
           <% unread_count = room.messages.where.not(user_id: current_user.id).where(read: false).count %>
 
-          <div class="bg-white/90 backdrop-blur-md border border-gray-200 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 flex items-center space-x-5">
-            <!-- 🎧 左：曲アイコン（円形） -->
-            <div class="flex-shrink-0 w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
+          <div class="bg-white/95 border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex overflow-hidden">
+
+            <!-- 👤 左：ユーザー情報 -->
+            <div class="w-1/4 bg-gray-50 flex flex-col items-center justify-center p-6 border-r border-gray-200">
+              <% if partner.icon.attached? %>
+                <%= image_tag partner.icon.variant(resize_to_fill: [80, 80]).processed,
+                    class: "w-[80px] h-[80px] rounded-full shadow border border-gray-200 object-cover mb-3" %>
+              <% else %>
+                <%= image_tag "default_icon.png", size: "80x80",
+                    class: "rounded-full shadow border border-gray-200 object-cover mb-3" %>
+              <% end %>
+
+              <p class="text-lg font-extrabold text-gray-800 text-center leading-tight">
+                <%= link_to partner.nickname, user_path(partner),
+                    class: "hover:text-purple-600 hover:underline transition" %>
+              </p>
+              <p class="text-xs text-gray-500 mt-0.5">とのチャット</p>
             </div>
 
-            <!-- 💬 中央：情報 -->
-            <div class="flex-grow">
-              <div class="flex justify-between items-start">
-                <div>
-                  <p class="text-lg font-semibold text-gray-800"><%= partner.nickname %></p>
-                  <p class="text-xs text-gray-500">とのチャット</p>
-                </div>
-
-                <% if unread_count > 0 %>
-                  <span class="inline-block bg-red-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">
-                    未読 <%= unread_count %>
-                  </span>
-                <% else %>
-                  <span class="inline-block bg-gray-100 text-gray-500 text-xs font-semibold px-2.5 py-1 rounded-full">
-                    既読
-                  </span>
+            <!-- 🎵 右：投稿情報 -->
+            <div class="w-3/4 p-6 flex flex-col justify-between">
+              <!-- 上段：タイトル・説明 -->
+              <div>
+                <% if collab.post.present? %>
+                  <p class="text-xs text-gray-500 mb-1">🎵 対象投稿</p>
+                  <h3 class="text-xl font-extrabold text-purple-700 leading-snug mb-1">
+                    <%= link_to collab.post.title, post_path(collab.post),
+                        class: "hover:text-purple-600 hover:underline transition" %>
+                  </h3>
+                  <% if collab.post.description.present? %>
+                    <p class="text-sm text-gray-600 line-clamp-2">
+                      <%= truncate(collab.post.description, length: 110) %>
+                    </p>
+                  <% end %>
                 <% end %>
               </div>
 
-              <% if collab.post.present? %>
-                <div class="mt-3">
-                  <p class="text-sm text-gray-500">🎵 対象投稿</p>
-                  <p class="text-base font-semibold text-purple-700"><%= collab.post.title %></p>
-                  <% if collab.post.description.present? %>
-                    <p class="text-xs text-gray-500 line-clamp-1"><%= collab.post.description %></p>
+              <!-- 下段：未読・時間・ボタン -->
+              <div class="flex justify-between items-center mt-4">
+                <div>
+                  <% if unread_count > 0 %>
+                    <span class="inline-block bg-red-500 text-white text-sm font-semibold px-4 py-1.5 rounded-full shadow">
+                      未読 <%= unread_count %>
+                    </span>
+                  <% else %>
+                    <span class="inline-block bg-gray-100 text-gray-500 text-sm font-semibold px-4 py-1.5 rounded-full">
+                     ✅ 既読
+                    </span>
                   <% end %>
+
+                  <p class="text-xs text-gray-400 mt-1">
+                    🕓 <% if room.messages.any? %>
+                      <%= time_ago_in_words(room.messages.last.created_at) %>前に更新
+                    <% else %>
+                      まだメッセージなし
+                    <% end %>
+                  </p>
                 </div>
-              <% end %>
 
-              <p class="text-xs text-gray-400 mt-2">
-                🕓 最終更新：
-                <% if room.messages.any? %>
-                  <%= time_ago_in_words(room.messages.last.created_at) %>前
-                <% else %>
-                  まだメッセージなし
-                <% end %>
-              </p>
-            </div>
-
-            <!-- 🔗 右：ボタン -->
-            <div class="flex-shrink-0">
-              <%= link_to chat_room_path(room),
-                  class: "inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm rounded-full shadow-md hover:from-purple-700 hover:to-indigo-700 hover:shadow-lg transition whitespace-nowrap" do %>
-                開く →
-              <% end %>
+                <%= link_to "チャットを開く", chat_room_path(room),
+                    class: "px-8 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm rounded-full shadow hover:from-purple-700 hover:to-indigo-700 hover:shadow-md transition whitespace-nowrap" %>
+              </div>
             </div>
           </div>
         <% end %>
       </div>
     <% else %>
-      <div class="text-center text-gray-600 bg-white/70 backdrop-blur-md py-10 rounded-2xl border border-gray-200 shadow-sm">
-        <p class="text-lg">まだチャットルームはありません。</p>
-        <p class="text-sm mt-2">コラボが成立するとここに表示されます </p>
+      <div class="text-center text-gray-600 bg-white/70 backdrop-blur-md py-8 rounded-2xl border border-gray-200 shadow-sm">
+        <p class="text-base">まだチャットルームはありません。</p>
+        <p class="text-xs mt-2">コラボが成立するとここに表示されます。</p>
       </div>
     <% end %>
   </div>
