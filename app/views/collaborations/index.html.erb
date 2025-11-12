@@ -12,38 +12,40 @@
             <% partner = collab.requester %>
             <div class="relative bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-5 hover:shadow-md transition">
 
-              <!-- 👤 相手＋投稿（横並び） -->
-              <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center space-x-3 overflow-hidden">
-                  <% if partner.icon.attached? %>
-                    <%= image_tag partner.icon.variant(resize_to_fill: [42, 42]).processed,
-                        class: "w-[42px] h-[42px] rounded-full border border-gray-200 shadow-sm object-cover" %>
-                  <% else %>
-                    <%= image_tag "default_icon.png", size: "42x42",
-                        class: "rounded-full border border-gray-200 shadow-sm object-cover" %>
-                  <% end %>
+      <!-- 👤 相手＋投稿（横並び） -->
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <% if partner.icon.attached? %>
+            <%= image_tag partner.icon.variant(resize_to_fill: [42, 42]).processed,
+                class: "w-[42px] h-[42px] rounded-full border border-gray-200 shadow-sm object-cover" %>
+          <% else %>
+            <%= image_tag "default_icon.png", size: "42x42",
+                class: "rounded-full border border-gray-200 shadow-sm object-cover" %>
+          <% end %>
 
-                  <div class="flex flex-wrap items-baseline gap-x-2">
-                    <p class="text-[15px] font-bold text-gray-800 truncate">
-                      <%= link_to partner.nickname, user_path(partner), class: "hover:text-indigo-600 hover:underline" %>
-                    </p>
-                    <p class="text-[14px] text-purple-700 font-semibold truncate">
-                      🎵 <%= link_to collab.post.title, post_path(collab.post), class: "hover:underline" %>
-                    </p>
-                  </div>
-                </div>
+          <div class="flex flex-col">
+            <div class="flex flex-wrap items-baseline gap-x-2">
+              <p class="text-[15px] font-bold text-gray-800 truncate ml-3">
+                <%= link_to partner.nickname, user_path(partner), class: "hover:text-indigo-600 hover:underline" %>
+              </p>
+              <p class="text-[18px] text-purple-700 font-semibold truncate ml-5">
+                <%= link_to collab.post.title, post_path(collab.post), class: "hover:underline" %>
+              </p>
+            </div>
+            <p class="text-[10px] text-gray-400 -mt-0.5">とのチャット</p>
+          </div>
+        </div>
 
-                <!-- ステータスバッジ -->
-                <% status_class = case collab.status
-                  when "accepted" then "bg-green-100 text-green-700"
-                  when "rejected" then "bg-red-100 text-red-700"
-                  else "bg-yellow-100 text-yellow-700"
-                end %>
-                <span class="text-xs font-semibold px-3 py-1 rounded-full <%= status_class %> whitespace-nowrap">
-                  <%= collab.status == "pending" ? "承認待ち" : collab.status == "accepted" ? "承認済み" : "拒否済み" %>
-                </span>
-              </div>
-
+        <!-- ステータスバッジ -->
+        <% status_class = case collab.status
+          when "accepted" then "bg-green-100 text-green-700"
+          when "rejected" then "bg-red-100 text-red-700"
+          else "bg-yellow-100 text-yellow-700"
+        end %>
+        <span class="text-xs font-semibold px-3 py-1 rounded-full <%= status_class %> whitespace-nowrap">
+          <%= collab.status == "pending" ? "承認待ち" : collab.status == "accepted" ? "承認済み" : "拒否済み" %>
+        </span>
+      </div>
               <!-- 💬 メッセージ -->
               <% if collab.message.present? %>
                 <p class="text-sm text-gray-700 leading-relaxed bg-indigo-50/70 px-3 py-2 rounded-lg mb-6">
