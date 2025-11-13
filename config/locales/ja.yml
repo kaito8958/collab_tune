@@ -40,3 +40,10 @@ ja:
       default: "%Y年%m月%d日 %H:%M"
       short: "%m/%d %H:%M"
       long: "%Y年%m月%d日(%a) %H時%M分"
+  activerecord:
+    attributes:
+      user:
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認用）"
+        nickname: "ニックネーム"
