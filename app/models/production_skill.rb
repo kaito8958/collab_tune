@@ -4,7 +4,7 @@ class ProductionSkill < ActiveHash::Base
     { id: 2, name: '作詞' },
     { id: 3, name: '編曲' },
     { id: 4, name: 'ビートメイク' },
-    { id: 5, name: 'トラックメイク（' },
+    { id: 5, name: 'トラックメイク' },
     { id: 6, name: '打ち込みのブラッシュアップ' },
     { id: 7, name: 'サウンドデザイン（Synth/音作り）' },
     { id: 8, name: 'オーケストレーション' },

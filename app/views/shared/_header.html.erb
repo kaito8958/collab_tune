@@ -21,34 +21,46 @@
 
     <!-- 通知アイコン -->
     <% if user_signed_in? %>
-<div class="relative">
-  <%= link_to "#", class: "p-2 rounded-full hover:bg-gray-100 transition relative",style:"display:block", title: "通知" do %>
-    <svg class="w-6 h-6 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9zm-2.45 13a1 1 0 0 1-1.1.9h-3a1 1 0 0 1-1.1-.9"/>
-    </svg>
+      <div class="relative">
+        <%= link_to "#", class: "p-2 rounded-full hover:bg-gray-100 transition relative", title: "通知" do %>
+          <svg class="w-6 h-6 text-gray-700" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9zm-2.45 13a1 1 0 0 1-1.1.9h-3a1 1 0 0 1-1.1-.9"/>
+          </svg>
 
-    <% unread = Message.unread_for(current_user).count rescue 0 %>
-    <span
-      id="notification-badge"
-      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full  <%= 'hidden' unless unread.positive? %>">
-      <%= unread %>
-    </span>
-  <% end %>
-</div>
+          <% unread = Message.unread_for(current_user).count rescue 0 %>
+          <span
+            id="notification-badge"
+            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full <%= 'hidden' unless unread.positive? %>">
+            <%= unread %>
+          </span>
+        <% end %>
+      </div>
 
-
-    <!-- ユーザーメニュー -->
+      <!-- ユーザーメニュー -->
       <div class="relative">
         <!-- トリガー -->
-        <button id="user-menu-button" class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition focus:outline-none" >
-          <span class="text-gray-700 font-semibold"><%= current_user.nickname %></span>
-          <svg class="w-4 h-4 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <button id="user-menu-button" class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition focus:outline-none">
+          <% if current_user.icon.attached? %>
+            <%= image_tag current_user.icon.variant(resize_to_fill: [36, 36]).processed,
+                          class: "w-9 h-9 rounded-full object-cover border border-gray-300 shadow-sm" %>
+          <% else %>
+            <%= image_tag "default_icon.png",
+                          class: "w-9 h-9 rounded-full object-cover border border-gray-300 shadow-sm bg-gray-100" %>
+          <% end %>
+          <svg class="w-4 h-4 text-gray-600 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M6 9l6 6 6-6"/>
           </svg>
         </button>
 
         <!-- プルダウンメニュー -->
-        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+        <div id="user-dropdown" class="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
+          <!-- ユーザー名表示 -->
+          <div class="px-4 py-3 border-b border-gray-100">
+            <p class="text-xs text-gray-500">ログイン中のユーザー</p>
+            <p class="text-base font-semibold text-gray-800"><%= current_user.nickname %></p>
+          </div>
+
+          <!-- メニューリンク -->
           <%= link_to user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
             プロフィール
           <% end %>
@@ -64,6 +76,7 @@
           <%= link_to new_post_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
             新規投稿
           <% end %>
+
           <div class="border-t border-gray-200"></div>
           <%= link_to destroy_user_session_path,
               data: { turbo_method: :delete },
@@ -80,6 +93,3 @@
     <% end %>
   </div>
 </header>
-
-
-

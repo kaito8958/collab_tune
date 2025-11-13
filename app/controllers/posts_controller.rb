@@ -7,7 +7,9 @@ class PostsController < ApplicationController
     @posts = Post.includes(:user).order(created_at: :desc)
   end
 
-  def show; end
+  def show
+    @comments = @post.comments.order(created_at: :desc)
+  end
 
   def new
     @post = Post.new
@@ -47,7 +49,16 @@ class PostsController < ApplicationController
     redirect_to posts_path, alert: "権限がありません。" unless @post.user == current_user
   end
 
-  def post_params
-    params.require(:post).permit(:title, :description, :genre, :tempo, :audio)
-  end
+def post_params
+  params.require(:post).permit(
+    :title,
+    :description,
+    :audio,
+    :tempo,
+    :status,
+    :recruiting_details,
+    looking_for_skill_ids: [],
+    genre_ids: []
+  )
+end
 end

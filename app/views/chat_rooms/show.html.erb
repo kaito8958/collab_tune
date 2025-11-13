@@ -1,15 +1,22 @@
 <div class="chat-room-page">
   <div class="chat-header">
-    <h3>
-      <% if @chat_room.receiver == current_user %>
-        <%= @chat_room.requester.nickname %> さんとのチャット
+    <% partner = (@chat_room.receiver == current_user ? @chat_room.requester : @chat_room.receiver) %>
+
+    <div class="chat-header-inner">
+      <!-- 相手のアイコン -->
+      <% if partner.icon.attached? %>
+        <%= image_tag partner.icon.variant(resize_to_fill: [40, 40]).processed, class: "chat-partner-icon" %>
       <% else %>
-        <%= @chat_room.receiver.nickname %> さんとのチャット
+        <%= image_tag "default_icon.png", size: "40x40", class: "chat-partner-icon" %>
       <% end %>
-    </h3>
-    <% if @chat_room.collaboration.present? %>
-      <p class="chat-post-title">投稿: <%= @chat_room.collaboration.post.title %></p>
-    <% end %>
+
+      <div class="chat-header-info">
+        <h3><%= partner.nickname %> さんとのチャット</h3>
+        <% if @chat_room.collaboration.present? %>
+          <p class="chat-post-title">投稿: <%= @chat_room.collaboration.post.title %></p>
+        <% end %>
+      </div>
+    </div>
   </div>
 
   <div class="chat-container">
@@ -17,12 +24,18 @@
       <%= render partial: "messages/message", collection: @messages, as: :message, locals: { sender_id: current_user.id } %>
     </div>
 
-  <%= form_with(model: [@chat_room, @message], html: { id: "message_form" }) do |form| %>
-    <%= form.text_area :content, rows: 2 %>
-    <%= form.submit "送信" %>
-  <% end %>
-  </div>
+    <%= form_with(model: [@chat_room, @message], html: { id: "message_form" }) do |form| %>
+      <%= form.text_area :content, rows: 2 %>
+      <%= form.submit "送信" %>
+    <% end %>
 
+    <!-- 📎 ギガファイル便案内 -->
+    <p class="gigafile-note">
+      大きなファイルを共有する場合は
+      <a href="https://gigafile.nu/" target="_blank">ギガファイル便</a>
+      のリンクを貼り付けてください。
+    </p>
+  </div>
 </div>
 
 <script type="module">
@@ -36,7 +49,6 @@
     if (form.closest("#message_form")) form.reset();
   });
 
-  // ✅ スクロールを下に固定
   document.addEventListener("turbo:load", () => {
     const messagesDiv = document.getElementById("messages");
     if (!messagesDiv) return;
