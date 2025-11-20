@@ -1,6 +1,6 @@
 // app/javascript/audio_player.js
 
-function togglePlay(postId) {
+export function togglePlay(postId) {
   const audio = document.getElementById(`audio-${postId}`);
   const btn = document.querySelector(`#btn-${postId}`);
   const progress = document.getElementById(`progress-${postId}`);
