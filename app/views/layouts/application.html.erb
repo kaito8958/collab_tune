@@ -11,9 +11,11 @@
     <%= javascript_importmap_tags %>
   </head>
 
-<body data-current-user-id="<%= current_user&.id %>"
-        data-current-room-id="<%= @chat_room&.id %>"
-        class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
+<body
+  data-current-user-id="<%= current_user&.id.to_s %>"
+  data-current-room-id="<%= (@chat_room&.id || '').to_s %>"
+  class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
+
 
     <!-- トーストメッセージ -->
     <%= render "shared/flash" %> 
