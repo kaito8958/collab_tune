@@ -29,10 +29,16 @@
 !/tmp/storage/
 !/tmp/storage/.keep
 
+# Ignore precompiled assets (must NOT be committed)
+/public/assets
+/public/packs
+/public/packs-test
+/public/.sprockets-manifest-*.json
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# Tailwind / importmap builds
 /app/assets/builds/*
 !/app/assets/builds/.keep
 !/app/assets/builds/*.js
