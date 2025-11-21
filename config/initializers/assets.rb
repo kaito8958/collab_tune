@@ -14,8 +14,6 @@ Rails.application.config.assets.precompile += %w[
   application.js
   header.js
   audio_player.js
-  channels/consumer.js
-  channels/index.js
   channels/message_channel.js
   channels/notification_channel.js
   controllers/application.js
