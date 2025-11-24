@@ -4,16 +4,20 @@ class PostsController < ApplicationController
   before_action :authorize_user!, only: [:edit, :update, :destroy]
 
   def index
-    @posts = Post.includes(:user).order(created_at: :desc)
+    @posts = Post.order(created_at: :desc)
 
+    # キーワード検索
     if params[:q].present?
-     keyword = "%#{params[:q]}%"
-     @posts = @posts.where(
-        "title LIKE :keyword OR description LIKE :keyword",
-        keyword: keyword
-       )
+      keyword = "%#{params[:q]}%"
+      @posts = @posts.where("title LIKE :keyword OR description LIKE :keyword", keyword: keyword)
+    end
+
+    # 募集中フィルタ
+    if params[:open] == "true"
+      @posts = @posts.recruiting
     end
   end
+
 
   def show
     @comments = @post.comments.order(created_at: :desc)
