@@ -12,8 +12,17 @@
 <section class="max-w-6xl mx-auto px-6 py-12">
   <h2 class="text-2xl font-bold text-gray-800 mb-6">最新の投稿</h2>
 
+  <!-- ▼ 検索結果表示 -->
+  <% if params[:q].present? %>
+    <p class="text-sm text-gray-600 mb-6">
+      「<%= params[:q] %>」の検索結果：<%= @posts.count %>件
+    </p>
+  <% end %>
+  <!-- ▼ 検索結果表示 -->
+
   <div class="flex flex-col items-center space-y-6">
-  <%= render partial: "post_card", collection: @posts, as: :post %>  </div>
+    <%= render partial: "post_card", collection: @posts, as: :post %>
+  </div>
 </section>
 
 <!--  CTA（未ログイン時のみ） -->
@@ -24,8 +33,3 @@
         class: "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition" %>
   </section>
 <% end %>
-
-
-
-
-

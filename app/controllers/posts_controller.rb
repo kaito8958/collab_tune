@@ -5,6 +5,14 @@ class PostsController < ApplicationController
 
   def index
     @posts = Post.includes(:user).order(created_at: :desc)
+
+    if params[:q].present?
+     keyword = "%#{params[:q]}%"
+     @posts = @posts.where(
+        "title LIKE :keyword OR description LIKE :keyword",
+        keyword: keyword
+       )
+    end
   end
 
   def show
