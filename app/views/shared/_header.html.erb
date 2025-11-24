@@ -8,18 +8,18 @@
       <span class="text-2xl font-extrabold text-gray-800 tracking-wide">CollabTune</span>
     <% end %>
   </div>
-  <!-- ▼▼ ここが検索フォーム ▼▼ -->
+  <!-- ▼ ヘッダー中央検索フォーム -->
   <div id="header-search"
-       class="left-1/2 transform -translate-x-1/2 top-14 max-w-md hidden z-50">
+      class="absolute left-1/2 -translate-x-1/2 w-full max-w-md hidden z-50">
     <%= form_with url: posts_path, method: :get, local: true,
-      class: "flex bg-white border border-gray-300 rounded-lg shadow-lg px-3 py-2" do %>
-      <%= text_field_tag :q, params[:q],
-        placeholder: "投稿を検索",
-        class: "flex-1 outline-none px-3 py-1 text-sm" %>
+        class: "flex bg-white border border-gray-300 rounded-lg shadow-lg px-3 py-2" do %>
+      <%= text_field_tag :q, params[:q], placeholder: "投稿を検索",
+          class: "flex-1 outline-none px-3 py-1 text-sm" %>
       <%= submit_tag "検索",
-        class: "ml-3 px-3 py-1 bg-purple-600 text-white rounded-md text-sm hover:bg-purple-700 transition" %>
+          class: "ml-3 px-3 py-1 bg-purple-600 text-white rounded-md text-sm hover:bg-purple-700 transition" %>
     <% end %>
   </div>
+<!-- ▲ ヘッダー中央検索フォーム -->
   <!-- 右側ナビ -->
   <div class="flex items-center space-x-5">
     <!-- 検索アイコン -->
