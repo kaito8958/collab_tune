@@ -1,4 +1,4 @@
-<header class="bg-gray-50 shadow-md border-b border-gray-200 px-6 py-2 flex justify-between items-center sticky top-0 z-40">
+<header class="relative bg-gray-50 shadow-md border-b border-gray-200 px-6 py-2 flex justify-between items-center sticky top-0 z-40">
   <!-- 左側：ロゴ -->
   <div class="flex items-center space-x-2">
     <%= link_to root_path, class: "flex items-center space-x-1 hover:opacity-80 transition" do %>
@@ -8,11 +8,22 @@
       <span class="text-2xl font-extrabold text-gray-800 tracking-wide">CollabTune</span>
     <% end %>
   </div>
-
+  <!-- ▼▼ ここが検索フォーム ▼▼ -->
+  <div id="header-search"
+       class="left-1/2 transform -translate-x-1/2 top-14 max-w-md hidden z-50">
+    <%= form_with url: posts_path, method: :get, local: true,
+      class: "flex bg-white border border-gray-300 rounded-lg shadow-lg px-3 py-2" do %>
+      <%= text_field_tag :q, params[:q],
+        placeholder: "投稿を検索",
+        class: "flex-1 outline-none px-3 py-1 text-sm" %>
+      <%= submit_tag "検索",
+        class: "ml-3 px-3 py-1 bg-purple-600 text-white rounded-md text-sm hover:bg-purple-700 transition" %>
+    <% end %>
+  </div>
   <!-- 右側ナビ -->
   <div class="flex items-center space-x-5">
-    <!-- 検索アイコン（ダミー） -->
-    <button class="hidden sm:block p-2 rounded-full hover:bg-gray-100 transition" title="検索機能は未実装">
+    <!-- 検索アイコン -->
+    <button id="search-toggle" class="hidden sm:block p-2 rounded-full hover:bg-gray-100 transition" title="検索">
       <svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <circle cx="11" cy="11" r="8"/>
         <line x1="21" x2="16.65" y1="21" y2="16.65"/>
@@ -38,7 +49,6 @@
 
       <!-- ユーザーメニュー -->
       <div class="relative">
-        <!-- トリガー -->
         <button id="user-menu-button" class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition focus:outline-none">
           <% if current_user.icon.attached? %>
             <%= image_tag current_user.icon.variant(resize_to_fill: [36, 36]).processed,
@@ -52,15 +62,13 @@
           </svg>
         </button>
 
-        <!-- プルダウンメニュー -->
+        <!-- プルダウン -->
         <div id="user-dropdown" class="absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded-lg shadow-lg hidden">
-          <!-- ユーザー名表示 -->
           <div class="px-4 py-3 border-b border-gray-100">
             <p class="text-xs text-gray-500">ログイン中のユーザー</p>
             <p class="text-base font-semibold text-gray-800"><%= current_user.nickname %></p>
           </div>
 
-          <!-- メニューリンク -->
           <%= link_to user_path(current_user), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
             プロフィール
           <% end %>
@@ -78,9 +86,7 @@
           <% end %>
 
           <div class="border-t border-gray-200"></div>
-          <%= link_to destroy_user_session_path,
-              data: { turbo_method: :delete },
-              class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+          <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
             ログアウト
           <% end %>
         </div>
