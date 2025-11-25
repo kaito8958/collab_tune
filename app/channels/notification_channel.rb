@@ -9,9 +9,9 @@ class NotificationChannel < ApplicationCable::Channel
   end
 
   def update_current_room(data)
-    if data["room_id"].present?
-      current_user.update(current_room_id: data["room_id"])
-      Rails.logger.info "💡 User #{current_user.id} entered room #{data['room_id']}"
-    end
+    return unless data['room_id'].present?
+
+    current_user.update(current_room_id: data['room_id'])
+    Rails.logger.info "💡 User #{current_user.id} entered room #{data['room_id']}"
   end
 end

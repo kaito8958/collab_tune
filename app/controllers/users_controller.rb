@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-
   def show
     @user = User.find(params[:id])
   end
@@ -9,4 +8,3 @@ class UsersController < ApplicationController
     @posts = @user.posts.order(created_at: :desc)
   end
 end
-

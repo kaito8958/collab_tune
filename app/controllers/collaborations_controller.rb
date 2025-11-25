@@ -6,13 +6,12 @@ class CollaborationsController < ApplicationController
     @received_collaborations = current_user.received_collaborations.includes(:requester, :post)
   end
 
-
   def create
     @collaboration = current_user.sent_collaborations.build(collaboration_params)
     @collaboration.status = 'pending'
 
     if @collaboration.receiver_id == current_user.id
-      redirect_to posts_path, alert: "自分の投稿には申請できません。"
+      redirect_to posts_path, alert: '自分の投稿には申請できません。'
       return
     end
 
@@ -23,32 +22,29 @@ class CollaborationsController < ApplicationController
     end
   end
 
-def update
-  @collaboration = Collaboration.find(params[:id])
+  def update
+    @collaboration = Collaboration.find(params[:id])
 
-  if params[:status].in?(%w[accepted rejected])
-    @collaboration.update(status: params[:status])
+    if params[:status].in?(%w[accepted rejected])
+      @collaboration.update(status: params[:status])
 
-    if @collaboration.status == "accepted"
-      room = ChatRoom.create!(
-        collaboration_id: @collaboration.id,
-        requester_id: @collaboration.requester_id,
-        receiver_id: @collaboration.receiver_id
-      )
-      redirect_to chat_room_path(room), notice: "コラボを承認しました。チャットを開始しましょう。"
-      return
+      if @collaboration.status == 'accepted'
+        room = ChatRoom.create!(
+          collaboration_id: @collaboration.id,
+          requester_id: @collaboration.requester_id,
+          receiver_id: @collaboration.receiver_id
+        )
+        redirect_to chat_room_path(room), notice: 'コラボを承認しました。チャットを開始しましょう。'
+        nil
+      else
+        redirect_to collaborations_path, alert: 'コラボ申請を拒否しました。'
+        nil
+      end
     else
-      redirect_to collaborations_path, alert: "コラボ申請を拒否しました。"
-      return
+      redirect_to collaborations_path, alert: '無効な操作です。'
+      nil
     end
-  else
-    redirect_to collaborations_path, alert: "無効な操作です。"
-    return
   end
-end
-
-
-
 
   private
 

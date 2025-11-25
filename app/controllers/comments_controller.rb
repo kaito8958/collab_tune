@@ -7,9 +7,9 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      redirect_to @post, notice: "コメントを投稿しました。"
+      redirect_to @post, notice: 'コメントを投稿しました。'
     else
-      redirect_to @post, alert: "コメントを入力してください。"
+      redirect_to @post, alert: 'コメントを入力してください。'
     end
   end
 
@@ -17,14 +17,11 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     if @comment.user == current_user
       @comment.destroy
-      redirect_to @comment.post, notice: "コメントを削除しました。"
+      redirect_to @comment.post, notice: 'コメントを削除しました。'
     else
-      redirect_to @comment.post, alert: "削除権限がありません。"
+      redirect_to @comment.post, alert: '削除権限がありません。'
     end
   end
-
-
-
 
   private
 

@@ -3,12 +3,12 @@ class Message < ApplicationRecord
   belongs_to :user
 
   after_create_commit :broadcast_message
-  after_create_commit :broadcast_notification  
+  after_create_commit :broadcast_notification
 
-  scope :unread_for, ->(user) {
+  scope :unread_for, lambda { |user|
     where(read: false)
       .joins(:chat_room)
-      .where("chat_rooms.requester_id = :id OR chat_rooms.receiver_id = :id", id: user.id)
+      .where('chat_rooms.requester_id = :id OR chat_rooms.receiver_id = :id', id: user.id)
       .where.not(user_id: user.id)
   }
 
@@ -19,11 +19,11 @@ class Message < ApplicationRecord
       "chat_room_#{chat_room.id}",
       {
         message_html: ApplicationController.render(
-          partial: "messages/message",
+          partial: 'messages/message',
           formats: [:html],
           locals: {
             message: self,
-            sender_id: user_id 
+            sender_id: user_id
           }
         ),
         message_id: id,
@@ -31,7 +31,6 @@ class Message < ApplicationRecord
       }
     )
   end
-
 
   def broadcast_notification
     recipient_id =

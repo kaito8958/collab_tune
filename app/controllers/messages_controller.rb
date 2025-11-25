@@ -12,8 +12,8 @@ class MessagesController < ApplicationController
       redirect_to @chat_room
     else
       @messages = @chat_room.messages.order(:created_at)
-      flash.now[:alert] = "メッセージを入力してください。"
-      render "chat_rooms/show", status: :unprocessable_entity
+      flash.now[:alert] = 'メッセージを入力してください。'
+      render 'chat_rooms/show', status: :unprocessable_entity
     end
   end
 
@@ -22,9 +22,7 @@ class MessagesController < ApplicationController
     message = Message.find(params[:id])
 
     # 自分以外が送ったメッセージのみ既読にする
-    if message.user_id != current_user.id
-      message.update(read: true)
-    end
+    message.update(read: true) if message.user_id != current_user.id
 
     head :ok
   end

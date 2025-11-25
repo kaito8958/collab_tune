@@ -9,15 +9,14 @@ class PostsController < ApplicationController
     # キーワード検索
     if params[:q].present?
       keyword = "%#{params[:q]}%"
-      @posts = @posts.where("title LIKE :keyword OR description LIKE :keyword", keyword: keyword)
+      @posts = @posts.where('title LIKE :keyword OR description LIKE :keyword', keyword: keyword)
     end
 
     # 募集中フィルタ
-    if params[:open] == "true"
-      @posts = @posts.recruiting
-    end
-  end
+    return unless params[:open] == 'true'
 
+    @posts = @posts.recruiting
+  end
 
   def show
     @comments = @post.comments.order(created_at: :desc)
@@ -30,17 +29,18 @@ class PostsController < ApplicationController
   def create
     @post = current_user.posts.build(post_params)
     if @post.save
-      redirect_to @post, notice: "投稿が完了しました。"
+      redirect_to @post, notice: '投稿が完了しました。'
     else
       render :new, status: :unprocessable_entity
     end
   end
 
-  def edit; end
+  def edit
+  end
 
   def update
     if @post.update(post_params)
-      redirect_to @post, notice: "投稿を更新しました。"
+      redirect_to @post, notice: '投稿を更新しました。'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -48,7 +48,7 @@ class PostsController < ApplicationController
 
   def destroy
     @post.destroy
-    redirect_to posts_path, notice: "投稿を削除しました。"
+    redirect_to posts_path, notice: '投稿を削除しました。'
   end
 
   private
@@ -58,19 +58,19 @@ class PostsController < ApplicationController
   end
 
   def authorize_user!
-    redirect_to posts_path, alert: "権限がありません。" unless @post.user == current_user
+    redirect_to posts_path, alert: '権限がありません。' unless @post.user == current_user
   end
 
-def post_params
-  params.require(:post).permit(
-    :title,
-    :description,
-    :audio,
-    :tempo,
-    :status,
-    :recruiting_details,
-    looking_for_skill_ids: [],
-    genre_ids: []
-  )
-end
+  def post_params
+    params.require(:post).permit(
+      :title,
+      :description,
+      :audio,
+      :tempo,
+      :status,
+      :recruiting_details,
+      looking_for_skill_ids: [],
+      genre_ids: []
+    )
+  end
 end
