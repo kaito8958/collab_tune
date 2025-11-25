@@ -1,23 +1,27 @@
 class ApplicationController < ActionController::Base
-  before_action :basic_auth
+  before_action :basic_auth, unless: -> { request.path == "/uptime" }
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_unread_count, if: :user_signed_in?
 
   protected
 
-def configure_permitted_parameters
-  added_attrs = [
-    :nickname,
-    :introduction,
-    :daw,
-    :goal,
-    :icon,
-    { genres: [], performance_skills: [], production_skills: [], looking_for_skills: [], links: {} }
-  ]
+  def uptime
+    head :ok
+  end
 
-  devise_parameter_sanitizer.permit(:sign_up, keys: added_attrs)
-  devise_parameter_sanitizer.permit(:account_update, keys: added_attrs)
-end
+  def configure_permitted_parameters
+    added_attrs = [
+      :nickname,
+      :introduction,
+      :daw,
+      :goal,
+      :icon,
+      { genres: [], performance_skills: [], production_skills: [], looking_for_skills: [], links: {} }
+    ]
+
+    devise_parameter_sanitizer.permit(:sign_up, keys: added_attrs)
+    devise_parameter_sanitizer.permit(:account_update, keys: added_attrs)
+  end
 
   private
 

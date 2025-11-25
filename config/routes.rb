@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'chat_rooms/index'
   get 'chat_rooms/show'
   get 'chat_rooms/create'
+  get '/uptime', to: 'application#uptime'
   devise_for :users
   resources :users, only: [:show] do
     member do
