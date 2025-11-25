@@ -79,19 +79,6 @@ DTM はアマチュアほど「作曲・編曲・録音・MIX まで全部一人
   1対1チャットから、複数ユーザー参加型の共同制作向けチャットルームへ拡張。
 
 
-## 🛠 使用技術
-
-| 分野 | 使用技術 |
-|------|-----------|
-| フロントエンド | HTML / CSS / JavaScript / Turbo / TailwindCSS（予定） |
-| バックエンド | Ruby on Rails 7 |
-| 認証 | Devise |
-| ファイル保存 | ActiveStorage（音源ファイル） |
-| DB | MySQL（開発） / PostgreSQL（本番） |
-| デプロイ | Render |
-| バージョン管理 | GitHub |
-
-
 
 ## 実装した機能についてのGIFおよび説明
 
