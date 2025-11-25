@@ -3,11 +3,11 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_unread_count, if: :user_signed_in?
 
-  protected
-
   def uptime
     head :ok
   end
+  
+  protected
 
   def configure_permitted_parameters
     added_attrs = [
