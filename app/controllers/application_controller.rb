@@ -1,12 +1,12 @@
 class ApplicationController < ActionController::Base
-  before_action :basic_auth, unless: -> { request.path == "/uptime" }
+  before_action :basic_auth, unless: -> { request.path == '/uptime' }
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_unread_count, if: :user_signed_in?
 
   def uptime
     head :ok
   end
-  
+
   protected
 
   def configure_permitted_parameters
@@ -32,11 +32,15 @@ class ApplicationController < ActionController::Base
   end
 
   def set_unread_count
-    @unread_count = Message
+    @unread_count = unread_messages_count
+  end
+
+  def unread_messages_count
+    Message
       .joins(:chat_room)
       .where(read: false)
       .where.not(user_id: current_user.id)
-      .where("chat_rooms.requester_id = :id OR chat_rooms.receiver_id = :id", id: current_user.id)
+      .where('chat_rooms.requester_id = :id OR chat_rooms.receiver_id = :id', id: current_user.id)
       .count
   end
 end
