@@ -4,42 +4,47 @@
 
 ---
 
-## 🧩 users テーブル
+| カラム名               | 型        | 制約                        | 説明                            |
+| ------------------ | -------- | ------------------------- | ----------------------------- |
+| id                 | bigint   | PK                        | ユーザーID（自動採番）                  |
+| nickname           | string   | null: false               | 表示名                           |
+| email              | string   | null: false, unique: true | メールアドレス（ログイン用）                |
+| encrypted_password | string   | null: false               | パスワード（Devise による暗号化）          |
+| introduction       | text     |                           | 自己紹介文                         |
+| daw                | string   |                           | 使用しているDAW名                    |
+| performance_skill  | json     |                           | 演奏系スキル（複数選択）                  |
+| production_skill   | json     |                           | 制作系スキル（複数選択）                  |
+| looking_for_skill  | json     |                           | 募集中のスキル（複数選択）                 |
+| goal               | text     |                           | やりたいこと・方向性                    |
+| links              | json     |                           | YouTube, SoundCloud などの URL 群 |
+| genres             | json     |                           | 得意/好きなジャンルのリスト                |
+| created_at         | datetime | null: false               | 登録日時                          |
+| updated_at         | datetime | null: false               | 更新日時                          |
 
-| カラム名 | 型 | 制約 | 説明 |
-|-----------|----|------|------|
-| id | bigint | PK | ユーザーID（自動採番） |
-| nickname | string | null: false | 表示名 |
-| email | string | null: false, unique: true | メールアドレス（ログイン用） |
-| encrypted_password | string | null: false | パスワード（Deviseによる暗号化） |
-| profile | text |  | 自己紹介文 |
-| avatar | string |  | プロフィール画像（ActiveStorage） |
-| instrument | string |  | 得意な楽器・担当パート |
-| genre | string |  | 好きな音楽ジャンル |
-| created_at | datetime | null: false | 登録日時 |
-| updated_at | datetime | null: false | 更新日時 |
 
 **アソシエーション**
 - has_many :posts  
 - has_many :comments  
 - has_many :sent_collaborations, class_name: "Collaboration", foreign_key: "requester_id"  
 - has_many :received_collaborations, class_name: "Collaboration", foreign_key: "receiver_id"  
+- has_many :messages
 
 ---
 
-## 📝 posts テーブル
+| カラム名                  | 型        | 制約              | 説明                              |
+| --------------------- | -------- | --------------- | ------------------------------- |
+| id                    | bigint   | PK              | 投稿ID                            |
+| user_id               | bigint   | FK, null: false | 投稿者ID（users.id 参照）              |
+| title                 | string   | null: false     | 曲のタイトル                          |
+| description           | text     |                 | 曲の説明                            |
+| genre_ids             | json     |                 | 選択ジャンル（複数）                      |
+| looking_for_skill_ids | json     |                 | 募集中スキル（複数）                      |
+| recruiting_details    | text     |                 | 募集している内容の詳細                     |
+| tempo                 | integer  |                 | BPM（テンポ）                        |
+| status                | integer  | default: 0      | enum（0: recruiting / 1: closed） |
+| created_at            | datetime | null: false     | 投稿日時                            |
+| updated_at            | datetime | null: false     | 更新日時                            |
 
-| カラム名 | 型 | 制約 | 説明 |
-|-----------|----|------|------|
-| id | bigint | PK | 投稿ID |
-| user_id | bigint | FK, null: false | 投稿者ID（users.id 参照） |
-| title | string | null: false | 曲のタイトル |
-| description | text |  | 曲の説明・コラボ募集内容 |
-| audio_file | string |  | 音源ファイル（ActiveStorage） |
-| genre | string |  | 曲のジャンル |
-| tempo | integer |  | BPM（テンポ） |
-| created_at | datetime | null: false | 投稿日時 |
-| updated_at | datetime | null: false | 更新日時 |
 
 **アソシエーション**
 - belongs_to :user  
@@ -65,24 +70,23 @@
 
 ---
 
-## 🤝 collaborations テーブル
+| カラム名         | 型        | 制約                 | 説明                                  |
+| ------------ | -------- | ------------------ | ----------------------------------- |
+| id           | bigint   | PK                 | コラボ申請ID                             |
+| requester_id | bigint   | FK, null: false    | 申請者ID（users.id 参照）                  |
+| receiver_id  | bigint   | FK, null: false    | 受信者ID（users.id 参照）                  |
+| post_id      | bigint   | FK, null: false    | 対象投稿ID（posts.id 参照）                 |
+| status       | string   | default: "pending" | 申請状態（pending / accepted / rejected） |
+| message      | text     |                    | コラボ申請メッセージ                          |
+| created_at   | datetime | null: false        | 作成日時                                |
+| updated_at   | datetime | null: false        | 更新日時                                |
 
-| カラム名 | 型 | 制約 | 説明 |
-|-----------|----|------|------|
-| id | bigint | PK | コラボ申請ID |
-| requester_id | bigint | FK, null: false | 申請者ID（users.id 参照） |
-| receiver_id | bigint | FK, null: false | 受信者ID（users.id 参照） |
-| post_id | bigint | FK | 対象投稿ID（posts.id 参照） |
-| status | string | default: "pending" | 申請状態（pending/accepted/rejected） |
-| message | text |  | コラボ申請メッセージ |
-| created_at | datetime | null: false | 作成日時 |
-| updated_at | datetime | null: false | 更新日時 |
 
 **アソシエーション**
 - belongs_to :requester, class_name: "User"  
 - belongs_to :receiver, class_name: "User"  
 - belongs_to :post  
-
+- has_one :chat_room
 ---
 
 
@@ -106,16 +110,16 @@
 
 ---
 
-## messages テーブル
+| カラム名         | 型        | 制約              | 説明            |
+| ------------ | -------- | --------------- | ------------- |
+| id           | bigint   | PK              | メッセージID       |
+| chat_room_id | bigint   | FK, null: false | チャットルームID     |
+| user_id      | bigint   | FK, null: false | 送信者ID         |
+| content      | text     | null: false     | メッセージ本文       |
+| read         | boolean  | default: false  | 未読/既読（通知バッジ用） |
+| created_at   | datetime | null: false     | 送信日時          |
+| updated_at   | datetime | null: false     | 更新日時          |
 
-| カラム名         | 型        | 制約              | 説明                          |
-| ------------ | -------- | --------------- | --------------------------- |
-| id           | bigint   | PK              | メッセージID                     |
-| chat_room_id | bigint   | FK, null: false | チャットルームID（chat_rooms.id 参照） |
-| user_id      | bigint   | FK, null: false | 送信者ID（users.id 参照）          |
-| content      | text     | null: false     | メッセージ本文                     |
-| created_at   | datetime | null: false     | 送信日時                        |
-| updated_at   | datetime | null: false     | 更新日時                        |
 
 **アソシエーション**
 
