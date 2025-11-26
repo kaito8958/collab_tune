@@ -51,6 +51,13 @@ ja:
         nickname: "ニックネーム"
         current_password: "現在のパスワード"
 
+      post:
+        title: "タイトル"
+        status: "募集状況"
+        user: "ユーザー"
+        looking_for_skill_ids: "募集パート"
+        recruiting_details: "募集の詳細"
+
     errors:
       models:
         user:

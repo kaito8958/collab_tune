@@ -40,10 +40,10 @@ class Post < ApplicationRecord
   def recruiting_requires_details_and_skill
     return unless recruiting?
 
-    errors.add(:looking_for_skill_ids, '募集パートを1つ以上選んでください') if looking_for_skill_ids.blank?
+    errors.add(:looking_for_skill_ids, 'を1つ以上選んでください') if looking_for_skill_ids.blank?
 
     return unless recruiting_details.blank?
 
-    errors.add(:recruiting_details, '募集の詳細を入力してください')
+    errors.add(:recruiting_details, 'を入力してください')
   end
 end

@@ -54,7 +54,7 @@
 
         <!-- 募集状態セレクト -->
         <div >
-          <%= f.label :status, "募集状態", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.label :status, "募集状況", class: "block text-sm font-medium text-gray-700 mb-1" %>
           <%= f.select :status,
                 Post.statuses.keys.map { |k| [k == "recruiting" ? "🟢 コラボ募集中" : " 🔴 コラボを募集しない", k] },
                 {},
