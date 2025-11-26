@@ -47,4 +47,26 @@ RSpec.describe Post, type: :model do
       end
     end
   end
+  describe '音源ファイルのバリデーション' do
+    it 'MP3ファイルなら保存できる' do
+      post = build(:post)
+      file = Rack::Test::UploadedFile.new(
+        Rails.root.join('spec/fixtures/files/mp3_dummy.mp3'),
+        'audio/mpeg'
+      )
+      post.audio.attach(file)
+      expect(post).to be_valid
+    end
+
+    it 'MP3以外のファイルだと保存できない' do
+      post = build(:post)
+      file = Rack::Test::UploadedFile.new(
+        Rails.root.join('spec/fixtures/files/text_dummy.txt'),
+        'text/plain'
+      )
+      post.audio.attach(file)
+      post.valid?
+      expect(post.errors.full_messages).to include('音源はMP3形式のファイルをアップロードしてください')
+    end
+  end
 end

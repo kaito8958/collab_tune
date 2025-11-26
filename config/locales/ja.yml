@@ -57,7 +57,7 @@ ja:
         user: "ユーザー"
         looking_for_skill_ids: "募集パート"
         recruiting_details: "募集の詳細"
-
+        audio: "音源"
     errors:
       models:
         user:
