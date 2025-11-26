@@ -16,7 +16,13 @@ class ApplicationController < ActionController::Base
       :daw,
       :goal,
       :icon,
-      { genres: [], performance_skills: [], production_skills: [], looking_for_skills: [], links: {} }
+      {
+        genres: [],
+        performance_skills: [],
+        production_skills: [],
+        looking_for_skills: [],
+        links: [:youtube, :soundcloud, :x]
+      }
     ]
 
     devise_parameter_sanitizer.permit(:sign_up, keys: added_attrs)
