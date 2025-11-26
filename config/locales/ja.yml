@@ -77,6 +77,11 @@ ja:
         user: "ユーザー"
         chat_room: "チャットルーム"
 
+      chat_room:
+        requester: "申請者"
+        receiver: "受信者"
+        collaboration: "コラボレーション"
+
     errors:
       models:
         user:

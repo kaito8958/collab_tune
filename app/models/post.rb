@@ -4,13 +4,19 @@ class Post < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :collaborations, dependent: :destroy
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 35 }
   validate :acceptable_audio
 
   enum status: { recruiting: 0, closed: 1 }
 
   validates :status, presence: true
   validate :recruiting_requires_details_and_skill
+  validates :tempo,
+            numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 30,
+              less_than_or_equal_to: 300
+            }
 
   # ===============================
   #  ActiveHash の紐付け補助
