@@ -14,10 +14,10 @@ class User < ApplicationRecord
   validates :nickname, presence: true
 
   VALID_PASSWORD_REGEX = /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+\z/
-  validates :password, format: { with: VALID_PASSWORD_REGEX }, if: :password_required?
+  validates :password, format: { with: VALID_PASSWORD_REGEX }, if: :validate_password_format?
 
-  def password_required?
-    new_record? || password.present?
+  def validate_password_format?
+    password.present? && (new_record? || will_save_change_to_password?)
   end
 
   def performance_skills
