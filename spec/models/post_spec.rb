@@ -69,4 +69,50 @@ RSpec.describe Post, type: :model do
       expect(post.errors.full_messages).to include('音源はMP3形式のファイルをアップロードしてください')
     end
   end
+  describe '境界値のテスト' do
+    let(:post) { build(:post, :recruiting) }
+
+    context 'タイトルの文字数' do
+      it '35文字なら保存できる' do
+        post.title = 'あ' * 35
+        expect(post).to be_valid
+      end
+
+      it '36文字だと保存できない' do
+        post.title = 'あ' * 36
+        post.valid?
+        expect(post.errors.full_messages).to include('タイトルは35文字以内で入力してください')
+      end
+    end
+
+    context 'テンポの数値' do
+      it '30なら保存できる' do
+        post.tempo = 30
+        expect(post).to be_valid
+      end
+
+      it '300なら保存できる' do
+        post.tempo = 300
+        expect(post).to be_valid
+      end
+
+      it '29だと保存できない' do
+        post.tempo = 29
+        post.valid?
+        expect(post.errors.full_messages).to include('テンポ（BPM）は30以上の値にしてください')
+      end
+
+      it '301だと保存できない' do
+        post.tempo = 301
+        post.valid?
+        expect(post.errors.full_messages).to include('テンポ（BPM）は300以下の値にしてください')
+      end
+
+      it '整数以外だと保存できない' do
+        post.tempo = 120.5
+        post.valid?
+        expect(post.errors.full_messages).to include('テンポ（BPM）は整数で入力してください')
+      end
+    end
+  end
 end
