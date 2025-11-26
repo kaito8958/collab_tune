@@ -64,6 +64,14 @@ ja:
         user: "ユーザー"
         post: "投稿"
 
+      collaboration:
+        requester: "申請者"
+        requester_id: "申請者" 
+        receiver: "受信者"
+        post: "投稿"
+        message: "メッセージ"
+        status: "状況"
+
     errors:
       models:
         user:
