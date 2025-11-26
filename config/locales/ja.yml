@@ -58,6 +58,12 @@ ja:
         looking_for_skill_ids: "募集パート"
         recruiting_details: "募集の詳細"
         audio: "音源"
+
+      comment:
+        body: "コメント"
+        user: "ユーザー"
+        post: "投稿"
+
     errors:
       models:
         user:
