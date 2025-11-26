@@ -72,6 +72,11 @@ ja:
         message: "メッセージ"
         status: "状況"
 
+      message:
+        content: "メッセージ"
+        user: "ユーザー"
+        chat_room: "チャットルーム"
+
     errors:
       models:
         user:
