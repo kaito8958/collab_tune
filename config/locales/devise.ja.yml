@@ -3,22 +3,20 @@ ja:
     sessions:
       signed_in: "ログインしました。"
       signed_out: "ログアウトしました。"
+
     registrations:
       signed_up: "CollabTuneへようこそ！まずはプロフィールを編集してみましょう✨"
       updated: "プロフィールを更新しました。"
       destroyed: "アカウントを削除しました。"
+
     failure:
       invalid: "メールアドレスまたはパスワードが正しくありません。"
       unauthenticated: "ログインしてください。"
       already_authenticated: "すでにログインしています。"
+
     errors:
       messages:
-        not_saved: "保存に失敗しました。入力内容を確認してください。"
-
-  activerecord:
-    errors:
-      models:
-        user:
-          attributes:
-            current_password:
-              blank: "現在のパスワードを入力してください"
+        not_saved: "変更が保存できませんでした。入力内容を確認してください。"
+        current_password_blank: "現在のパスワードを入力してください"
+        current_password_invalid: "現在のパスワードが正しくありません"
+        password_complexity: "パスワードは英字と数字の両方を含める必要があります"

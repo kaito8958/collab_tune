@@ -11,6 +11,15 @@ class User < ApplicationRecord
   has_many :messages, dependent: :destroy
   has_one_attached :icon
 
+  validates :nickname, presence: true
+
+  VALID_PASSWORD_REGEX = /\A(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]+\z/
+  validates :password, format: { with: VALID_PASSWORD_REGEX }, if: :password_required?
+
+  def password_required?
+    new_record? || password.present?
+  end
+
   def performance_skills
     super || []
   end

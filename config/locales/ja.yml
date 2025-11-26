@@ -10,7 +10,7 @@ ja:
         other: "%{count}秒前"
       less_than_x_minutes:
         one: "1分未満前"
-        other: "%{count}分未満前"
+        other: "約%{count}分未満前"
       x_minutes:
         one: "約1分前"
         other: "約%{count}分前"
@@ -25,7 +25,7 @@ ja:
         other: "約%{count}か月前"
       x_months:
         one: "1か月前"
-        other: "%{count}か月前"
+        other: "約%{count}か月前"
       about_x_years:
         one: "約1年前"
         other: "約%{count}年前"
@@ -34,12 +34,14 @@ ja:
         other: "%{count}年以上前"
       almost_x_years:
         one: "ほぼ1年前"
-        other: "ほぼ%{count}年前"
+        other: "約%{count}年前"
+
   time:
     formats:
       default: "%Y年%m月%d日 %H:%M"
       short: "%m/%d %H:%M"
       long: "%Y年%m月%d日(%a) %H時%M分"
+
   activerecord:
     attributes:
       user:
@@ -47,3 +49,15 @@ ja:
         password: "パスワード"
         password_confirmation: "パスワード（確認用）"
         nickname: "ニックネーム"
+        current_password: "現在のパスワード"
+
+    errors:
+      models:
+        user:
+          attributes:
+            current_password:
+              blank: "を入力してください"
+
+  errors:
+    messages:
+      not_saved: "保存できませんでした。"
