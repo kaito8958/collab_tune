@@ -16,13 +16,20 @@ Rails.application.routes.draw do
 
   resources :collaborations, only: [:create, :index, :update]
 
-  resources :chat_rooms, only: [:index, :show, :create] do
-    resources :messages, only: [:create]
+  resources :chat_rooms do
+    resources :messages do
+      collection do
+        get :poll
+      end
+    end
   end
 
   resources :messages, only: [] do
     patch :mark_as_read, on: :member
   end
 
+  get "notifications/poll", to: "notifications#poll"
+
   mount ActionCable.server => '/cable'
 end
+

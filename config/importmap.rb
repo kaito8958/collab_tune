@@ -21,3 +21,5 @@ pin "@rails/actioncable", to: "actioncable.esm.js"
 
 pin "header", to: "header.js"
 pin "audio_player", to: "audio_player.js"
+pin "chat_ajax", to: "chat/chat_ajax.js"
+pin "notification_poll", to: "notifications/notification_poll.js"

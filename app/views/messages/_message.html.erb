@@ -1,5 +1,9 @@
 <% self_message = (message.user_id == sender_id) %>
-<div class="message <%= self_message ? 'self' : 'other' %>" data-sender-id="<%= message.user_id %>">
+<div
+  class="message <%= self_message ? 'self' : 'other' %>"
+  data-sender-id="<%= message.user_id %>"
+  data-message-id="<%= message.id %>">
+  
   <div class="message-content">
     <%= simple_format(message.content) %>
     <time><%= message.created_at.strftime("%Y/%m/%d %H:%M") %></time>

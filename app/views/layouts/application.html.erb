@@ -11,7 +11,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-<body
+  <body
   data-current-user-id="<%= current_user&.id.to_s %>"
   data-current-room-id="<%= (@chat_room&.id || '').to_s %>"
   class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
@@ -30,8 +30,13 @@
     </main>
 
     <!-- 共通フッター（後で作成） -->
-<% unless controller_name.in?(["chat_rooms", "sessions", "registrations"]) %>
-  <%= render "shared/footer" %>
-<% end %>
+    <% unless controller_name.in?(["chat_rooms", "sessions", "registrations"]) %>
+      <%= render "shared/footer" %>
+    <% end %>
+
+    <!-- 📌 通知ポーリングJSを読み込む位置（重要） -->
+    <script type="module">
+      import "notification_poll"
+    </script>
   </body>
 </html>

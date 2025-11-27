@@ -20,14 +20,21 @@
   </div>
 
   <div class="chat-container">
-    <div id="messages">
+    <div id="messages"
+        data-chat-room-id="<%= @chat_room.id %>"
+        data-last-message-id="<%= @messages.last&.id || 0 %>">
       <%= render partial: "messages/message", collection: @messages, as: :message, locals: { sender_id: current_user.id } %>
     </div>
 
-    <%= form_with(model: [@chat_room, @message], html: { id: "message_form" }) do |form| %>
+    <%= form_with(
+          model: [@chat_room, @message],
+          html: { id: "message_form", data: { turbo: false } },
+          local: false
+        ) do |form| %>
       <%= form.text_area :content, rows: 2 %>
       <%= form.submit "送信" %>
     <% end %>
+
 
     <!-- 📎 ギガファイル便案内 -->
     <p class="gigafile-note">
@@ -38,10 +45,13 @@
   </div>
 </div>
 
+<!-- 
 <script type="module">
   import { subscribeToMessages } from "/assets/channels/message_channel.js";
   subscribeToMessages(<%= @chat_room.id %>);
 </script>
+-->
+
 
 <script>
   document.addEventListener("turbo:submit-end", (event) => {
@@ -57,4 +67,8 @@
     const observer = new MutationObserver(scrollToBottom);
     observer.observe(messagesDiv, { childList: true });
   });
+</script>
+
+<script type="module">
+  import "chat_ajax"
 </script>
