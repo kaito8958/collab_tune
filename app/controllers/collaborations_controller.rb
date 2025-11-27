@@ -35,14 +35,11 @@ class CollaborationsController < ApplicationController
           receiver_id: @collaboration.receiver_id
         )
         redirect_to chat_room_path(room), notice: 'コラボを承認しました。チャットを開始しましょう。'
-        nil
       else
         redirect_to collaborations_path, alert: 'コラボ申請を拒否しました。'
-        nil
       end
     else
       redirect_to collaborations_path, alert: '無効な操作です。'
-      nil
     end
   end
 
