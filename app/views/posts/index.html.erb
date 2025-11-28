@@ -1,18 +1,11 @@
-<!--  ヒーロー（未ログイン時のみ表示） -->
-<% unless user_signed_in? %>
-  <section class="bg-gradient-to-r from-purple-50 to-indigo-50 py-12 text-center">
-    <h1 class="text-3xl font-extrabold text-gray-800 mb-3">コラボで広がる音の世界。</h1>
-    <p class="text-gray-600 mb-6">CollabTuneは、DTMクリエイターが繋がり、共に曲を作るためのコミュニティです。</p>
-    <%= link_to "新規登録してはじめる", new_user_registration_path,
-        class: "bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition" %>
-  </section>
-<% end %>
 
-<!--  投稿一覧（全員表示） --->
-<section class="max-w-6xl mx-auto px-6 py-6">
-<h2 class="text-xl font-semibold text-gray-700 mb-4 tracking-wide">
-  最新の投稿
-</h2>
+
+
+<!--  投稿一覧（全員表示） -->
+<section class="max-w-6xl mx-auto px-6 py-8">
+  <h2 class="text-xl font-semibold text-gray-700 mb-4 tracking-wide">
+    最新の投稿
+  </h2>
 
   <!-- ▼ 検索結果表示 -->
   <% if params[:q].present? %>
@@ -20,37 +13,26 @@
       「<%= params[:q] %>」の検索結果：<%= @posts.count %>件
     </p>
   <% end %>
-  <!-- ▼ 検索結果表示 -->
 
-<% open_filter = params[:open] == "true" %>
+  <% open_filter = params[:open] == "true" %>
 
-<div class="flex justify-center mb-4 space-x-4">
-  <!-- すべて表示 -->
-  <%= link_to "すべて表示",
-      posts_path,
-      class: "px-3 py-2 rounded-full text-xs font-semibold
-              #{!open_filter ? "bg-purple-600 text-white shadow-md" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}" %>
+  <!-- ▼ 絞り込みボタン -->
+  <div class="flex justify-center mb-4 space-x-3">
+    <%= link_to "すべて表示",
+        posts_path,
+        class: "px-3 py-1.5 rounded-xl text-xs font-medium
+                #{!open_filter ? "bg-purple-600 text-white shadow-md" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}" %>
 
-  <!-- 募集中のみ -->
-  <%= link_to "募集中のみ",
-      posts_path(open: "true"),
-      class: "px-3 py-2 rounded-full text-xs font-semibold
-              #{open_filter ? "bg-purple-600 text-white shadow-md" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}" %>
-</div>
+    <%= link_to "募集中のみ",
+        posts_path(open: "true"),
+        class: "px-3 py-1.5 rounded-xl text-xs font-medium
+                #{open_filter ? "bg-purple-600 text-white shadow-md" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}" %>
+  </div>
 
-
-
-
+  <!-- ▼ 投稿カード一覧 -->
   <div class="flex flex-col items-center space-y-6">
     <%= render partial: "post_card", collection: @posts, as: :post %>
   </div>
 </section>
 
-<!--  CTA（未ログイン時のみ） -->
-<% unless user_signed_in? %>
-  <section class="bg-purple-50 py-10 text-center">
-    <h2 class="text-xl font-bold text-gray-700 mb-3">あなたの音を誰かと繋げよう</h2>
-    <%= link_to "今すぐ登録する", new_user_registration_path,
-        class: "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:shadow-lg transition" %>
-  </section>
-<% end %>
+

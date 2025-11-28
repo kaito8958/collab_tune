@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CollabTune</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "style", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+</head>
+
+<body class="min-h-screen flex flex-col text-gray-800 bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2]">
+
+  <%= render "shared/header" %>
+
+  <%= render "posts/hero" %>
+
+  <main class="flex-grow px-4 py-6">
+    <%= yield %>
+  </main>
+
+  <%= render "posts/cta" %>
+
+  <%= render "shared/footer" %>
+</body>
+</html>

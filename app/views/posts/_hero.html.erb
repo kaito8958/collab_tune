@@ -1,0 +1,18 @@
+<% unless user_signed_in? %>
+<section class="w-full py-24 bg-[radial-gradient(ellipse_at_center,_white,_transparent_70%)]">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h1 class="text-2xl font-extrabold text-gray-800 mb-3 tracking-tight">
+      コラボで広がる音の世界。
+    </h1>
+    <p class="text-gray-600 mb-6 text-sm">
+      CollabTuneは、DTMクリエイターが繋がり、共に曲を作るためのコミュニティです。
+    </p>
+    <%= link_to "新規登録してはじめる", new_user_registration_path,
+        class: "bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl 
+                font-semibold shadow-md hover:shadow-lg transition" %>
+  </div>
+</section>
+
+
+
+<% end %>
