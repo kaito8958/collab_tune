@@ -1,9 +1,7 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#C7D3E0] to-[#E5EBF2] px-4 py-10">
   <div class="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-8 w-full max-w-2xl border border-gray-200">
     <h2 class="text-2xl font-extrabold text-center text-gray-800 mb-2">投稿を編集</h2>
-    <p class="text-center text-sm text-gray-500 mb-8">
-      内容を更新して、より魅力的なコラボ募集に仕上げましょう。
-    </p>
+
 
     <%= form_with(model: @post, local: true, multipart: true, data: { controller: "post-form" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: @post %>
