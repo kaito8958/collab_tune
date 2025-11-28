@@ -8,7 +8,7 @@ document.addEventListener("turbo:load", () => {
     try {
       const currentRoomId = document.body.dataset.currentRoomId;
 
-      // ★ 通知API自体は呼ぶ（未読数は正しく取得する）
+      // ★ 通知API自体は呼ぶ
       const res = await fetch("/notifications/poll", {
         headers: {
           Accept: "application/json"

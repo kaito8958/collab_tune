@@ -4,7 +4,7 @@ document.addEventListener("turbo:load", () => {
 
   if (!form || !messagesDiv) return;
 
-  const chatRoomId = messagesDiv.dataset.chatRoomId;       // ← ビューに data 属性を追加する必要あり
+  const chatRoomId = messagesDiv.dataset.chatRoomId;       
   let lastMessageId = Number(messagesDiv.dataset.lastMessageId || 0);
 
   const csrfToken = document

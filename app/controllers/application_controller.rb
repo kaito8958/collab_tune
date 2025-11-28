@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
-  before_action :basic_auth, unless: -> { request.path == '/uptime' }
+  before_action :basic_auth, unless: lambda {
+    request.path == '/uptime' ||
+      devise_controller? && action_name.in?(%w[destroy])
+  }
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_unread_count, if: :user_signed_in?
 
