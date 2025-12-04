@@ -1,8 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :basic_auth, unless: lambda {
-    request.path == '/uptime' ||
-      devise_controller? && action_name.in?(%w[destroy])
-  }
+  before_action :basic_auth, if: :need_basic_auth?
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :set_unread_count, if: :user_signed_in?
 
@@ -33,6 +30,21 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def need_basic_auth?
+    return false unless Rails.env.production?
+
+    excluded_paths = [
+      '/users/sign_in',
+      '/users/sign_out',
+      '/users/sign_up',
+      '/users/password',
+      '/users/password/',
+      '/uptime'
+    ]
+
+    excluded_paths.none? { |path| request.path.start_with?(path) }
+  end
 
   def basic_auth
     authenticate_or_request_with_http_basic do |username, password|
