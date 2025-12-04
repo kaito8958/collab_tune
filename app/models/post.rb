@@ -18,9 +18,14 @@ class Post < ApplicationRecord
               less_than_or_equal_to: 300
             }
 
-  # ===============================
-  #  ActiveHash の紐付け補助
-  # ===============================
+  def genre_ids
+    super&.map(&:to_i)
+  end
+
+  def looking_for_skill_ids
+    super&.map(&:to_i)
+  end
+
   def looking_for_skills
     return [] unless looking_for_skill_ids.is_a?(Array)
 
